@@ -4,7 +4,7 @@
 /////////////////////////////////////////////////////////////////
 
 /*
- Band Limited Oscillator based on Peter Pabon's algorithm.
+ Band Limited Oscillator 2 based on Peter Pabon's algorithm.
  Created by So Oishi on 02/11/14.
  Copyright (c) 2014 So Oishi. All rights reserved.
  
