@@ -12,11 +12,6 @@ SuperCollider demo code
 SuperCollider file with extension .scd demonstrates the basic function of this UGen.
 
 
-PDF file
--------
-PDF file briefly explains the algorithm of this UGen.
-
-
 Modifying the software
 -------
 The C++ code for the plugin and CMakeLists.txt file are included. You can use them to modify the software.
