@@ -1,4 +1,5 @@
 #include "SC_PlugIn.h"
+#include <stdint.h>
 #include <math.h>
 
 /////////////////////////////////////////////////////////////////
@@ -42,8 +43,8 @@ struct BufUnit : public Unit
 struct TableLookup : public BufUnit
 {
     double m_cpstoinc, m_radtoinc;
-    int32 mTableSize;
-    int32 m_lomask;
+    int32_t mTableSize;
+    int32_t m_lomask;
 };
 
 /////////////////////////////////////////////////////////////////
@@ -51,7 +52,7 @@ struct TableLookup : public BufUnit
 
 struct BLOsc2 : public TableLookup
 {
-    int32 m_phase;
+    int32_t m_phase;
     float m_phasein;
 };
 
@@ -224,28 +225,28 @@ void BLOsc2_next_kkkkk(BLOsc2 *unit, int inNumSamples)
     float *table0 = ft->mSineWavetable;
     float *table1 = table0 + 1;
     
-    int32 phase = unit->m_phase;
-    int32 lomask = unit->m_lomask;
+    int32_t phase = unit->m_phase;
+    int32_t lomask = unit->m_lomask;
     
-    int32 phaseinc = (int32)(unit->m_cpstoinc * freqin);
+    int32_t phaseinc = (int32_t)(unit->m_cpstoinc * freqin);
     float radtoinc = unit->m_radtoinc;
     
     
     LOOP1(inNumSamples,
           float loHarmonics = loHarmonicsin;
-          int32 loHarmonicsInt = ceil(loHarmonics);
-          int32 loHarmonicsIntMinusOne = loHarmonicsInt - 1;
+          int32_t loHarmonicsInt = ceil(loHarmonics);
+          int32_t loHarmonicsIntMinusOne = loHarmonicsInt - 1;
           float loHarmonicsFrac = loHarmonicsInt - loHarmonics;
           
           float hiHarmonics = hiHarmonicsin;
-          int32 hiHarmonicsInt = floor(hiHarmonics);
+          int32_t hiHarmonicsInt = floor(hiHarmonics);
           float hiHarmonicsFrac = hiHarmonics - hiHarmonicsInt;
           
-          int32 hiHarmonicsIntPlusOne = hiHarmonicsInt + 1;
-          int32 loEvenHarmonics = loHarmonicsInt%2 == 0? loHarmonicsInt : loHarmonicsInt + 1; // The lowest even harmonic index
-          int32 hiEvenHarmonics = hiHarmonicsInt%2 == 0? hiHarmonicsInt : hiHarmonicsInt - 1; // The highest even harmonic index
-          int32 hiEvenHarmonicsPlusTwo = hiEvenHarmonics + 2;
-          int32 numEvenHarmonics = (hiEvenHarmonics - loEvenHarmonics) / 2 + 1; //The total number of even harmonics
+          int32_t hiHarmonicsIntPlusOne = hiHarmonicsInt + 1;
+          int32_t loEvenHarmonics = loHarmonicsInt%2 == 0? loHarmonicsInt : loHarmonicsInt + 1; // The lowest even harmonic index
+          int32_t hiEvenHarmonics = hiHarmonicsInt%2 == 0? hiHarmonicsInt : hiHarmonicsInt - 1; // The highest even harmonic index
+          int32_t hiEvenHarmonicsPlusTwo = hiEvenHarmonics + 2;
+          int32_t numEvenHarmonics = (hiEvenHarmonics - loEvenHarmonics) / 2 + 1; //The total number of even harmonics
           
           float slope = slopein;
           float evenOddRatio = evenOddRatioin;
@@ -257,19 +258,19 @@ void BLOsc2_next_kkkkk(BLOsc2 *unit, int inNumSamples)
           float ampFactor = 0.99<slope&&slope<1.01? (hiHarmonicsInt - loHarmonicsInt + 1) - evenOddFactor * numEvenHarmonics + fundamentalAdjust + extraHarmonicsAdjust:((pow(slope,loHarmonicsInt) - pow(slope,hiHarmonicsIntPlusOne)) / (1 - slope)) - (evenOddFactor * (pow(slope, loEvenHarmonics) - pow(slope, hiEvenHarmonicsPlusTwo)) / (1 - pow(slope, 2))) + fundamentalAdjust * pow(slope,loHarmonicsIntMinusOne) + extraHarmonicsAdjust * pow(slope, hiHarmonicsIntPlusOne);
           //ampFactor will be used to normalize the output amplitude. To avoid the denominator of this calculation to be 0 when slope = 1, the different formula is used when slope falls between 0.99 and 1.01.
           
-          int32 sinPhaseBase = phase;
-          int32 cosPhaseBase = phase + (int32)(radtoinc * pi2);
-          int32 sinPhaseLo = phase * loHarmonicsInt;
-          int32 sinPhaseLoMinusOne = phase * loHarmonicsIntMinusOne;
-          int32 cosPhaseLo = phase * loHarmonicsInt + (int32)(radtoinc * pi2);
-          int32 sinPhaseHiPlusOne = phase * hiHarmonicsIntPlusOne;
-          int32 cosPhaseHiPlusOne = phase * hiHarmonicsIntPlusOne + (int32)(radtoinc * pi2);
-          int32 sinPhase2 = phase * 2;
-          int32 cosPhase2 = phase * 2 + (int32)(radtoinc * pi2);
-          int32 sinPhaseLoEven = phase * loEvenHarmonics;
-          int32 cosPhaseLoEven = phase * loEvenHarmonics + (int32)(radtoinc * pi2);
-          int32 sinPhaseHiEvenPlusTwo = phase * hiEvenHarmonicsPlusTwo;
-          int32 cosPhaseHiEvenPlusTWo = phase * hiEvenHarmonicsPlusTwo + (int32)(radtoinc * pi2);
+          int32_t sinPhaseBase = phase;
+          int32_t cosPhaseBase = phase + (int32_t)(radtoinc * pi2);
+          int32_t sinPhaseLo = phase * loHarmonicsInt;
+          int32_t sinPhaseLoMinusOne = phase * loHarmonicsIntMinusOne;
+          int32_t cosPhaseLo = phase * loHarmonicsInt + (int32_t)(radtoinc * pi2);
+          int32_t sinPhaseHiPlusOne = phase * hiHarmonicsIntPlusOne;
+          int32_t cosPhaseHiPlusOne = phase * hiHarmonicsIntPlusOne + (int32_t)(radtoinc * pi2);
+          int32_t sinPhase2 = phase * 2;
+          int32_t cosPhase2 = phase * 2 + (int32_t)(radtoinc * pi2);
+          int32_t sinPhaseLoEven = phase * loEvenHarmonics;
+          int32_t cosPhaseLoEven = phase * loEvenHarmonics + (int32_t)(radtoinc * pi2);
+          int32_t sinPhaseHiEvenPlusTwo = phase * hiEvenHarmonicsPlusTwo;
+          int32_t cosPhaseHiEvenPlusTWo = phase * hiEvenHarmonicsPlusTwo + (int32_t)(radtoinc * pi2);
           
           float a = pow(slope,loHarmonicsInt) * lookupi1(table0, table1, cosPhaseLo, lomask) - pow(slope,hiHarmonicsIntPlusOne) * lookupi1(table0, table1, cosPhaseHiPlusOne, lomask);
           float b = pow(slope,loHarmonicsInt) * lookupi1(table0, table1, sinPhaseLo, lomask) - pow(slope,hiHarmonicsIntPlusOne) * lookupi1(table0, table1, sinPhaseHiPlusOne, lomask);
@@ -303,28 +304,28 @@ void BLOsc2_next_kkkka(BLOsc2 *unit, int inNumSamples)
     float *table0 = ft->mSineWavetable;
     float *table1 = table0 + 1;
     
-    int32 phase = unit->m_phase;
-    int32 lomask = unit->m_lomask;
+    int32_t phase = unit->m_phase;
+    int32_t lomask = unit->m_lomask;
     
-    int32 phaseinc = (int32)(unit->m_cpstoinc * freqin);
+    int32_t phaseinc = (int32_t)(unit->m_cpstoinc * freqin);
     float radtoinc = unit->m_radtoinc;
     
     
     LOOP1(inNumSamples,
           float loHarmonics = loHarmonicsin;
-          int32 loHarmonicsInt = ceil(loHarmonics);
-          int32 loHarmonicsIntMinusOne = loHarmonicsInt - 1;
+          int32_t loHarmonicsInt = ceil(loHarmonics);
+          int32_t loHarmonicsIntMinusOne = loHarmonicsInt - 1;
           float loHarmonicsFrac = loHarmonicsInt - loHarmonics;
           
           float hiHarmonics = hiHarmonicsin;
-          int32 hiHarmonicsInt = floor(hiHarmonics);
+          int32_t hiHarmonicsInt = floor(hiHarmonics);
           float hiHarmonicsFrac = hiHarmonics - hiHarmonicsInt;
           
-          int32 hiHarmonicsIntPlusOne = hiHarmonicsInt + 1;
-          int32 loEvenHarmonics = loHarmonicsInt%2 == 0? loHarmonicsInt : loHarmonicsInt + 1; // The lowest even harmonic index
-          int32 hiEvenHarmonics = hiHarmonicsInt%2 == 0? hiHarmonicsInt : hiHarmonicsInt - 1; // The highest even harmonic index
-          int32 hiEvenHarmonicsPlusTwo = hiEvenHarmonics + 2;
-          int32 numEvenHarmonics = (hiEvenHarmonics - loEvenHarmonics) / 2 + 1; //The total number of even harmonics
+          int32_t hiHarmonicsIntPlusOne = hiHarmonicsInt + 1;
+          int32_t loEvenHarmonics = loHarmonicsInt%2 == 0? loHarmonicsInt : loHarmonicsInt + 1; // The lowest even harmonic index
+          int32_t hiEvenHarmonics = hiHarmonicsInt%2 == 0? hiHarmonicsInt : hiHarmonicsInt - 1; // The highest even harmonic index
+          int32_t hiEvenHarmonicsPlusTwo = hiEvenHarmonics + 2;
+          int32_t numEvenHarmonics = (hiEvenHarmonics - loEvenHarmonics) / 2 + 1; //The total number of even harmonics
           
           float slope = slopein;
           float evenOddRatio = ZXP(evenOddRatioin);
@@ -336,19 +337,19 @@ void BLOsc2_next_kkkka(BLOsc2 *unit, int inNumSamples)
           float ampFactor = 0.99<slope&&slope<1.01? (hiHarmonicsInt - loHarmonicsInt + 1) - evenOddFactor * numEvenHarmonics + fundamentalAdjust + extraHarmonicsAdjust:((pow(slope,loHarmonicsInt) - pow(slope,hiHarmonicsIntPlusOne)) / (1 - slope)) - (evenOddFactor * (pow(slope, loEvenHarmonics) - pow(slope, hiEvenHarmonicsPlusTwo)) / (1 - pow(slope, 2))) + fundamentalAdjust * pow(slope,loHarmonicsIntMinusOne) + extraHarmonicsAdjust * pow(slope, hiHarmonicsIntPlusOne);
           //ampFactor will be used to normalize the output amplitude. To avoid the denominator of this calculation to be 0 when slope = 1, the different formula is used when slope falls between 0.99 and 1.01.
           
-          int32 sinPhaseBase = phase;
-          int32 cosPhaseBase = phase + (int32)(radtoinc * pi2);
-          int32 sinPhaseLo = phase * loHarmonicsInt;
-          int32 sinPhaseLoMinusOne = phase * loHarmonicsIntMinusOne;
-          int32 cosPhaseLo = phase * loHarmonicsInt + (int32)(radtoinc * pi2);
-          int32 sinPhaseHiPlusOne = phase * hiHarmonicsIntPlusOne;
-          int32 cosPhaseHiPlusOne = phase * hiHarmonicsIntPlusOne + (int32)(radtoinc * pi2);
-          int32 sinPhase2 = phase * 2;
-          int32 cosPhase2 = phase * 2 + (int32)(radtoinc * pi2);
-          int32 sinPhaseLoEven = phase * loEvenHarmonics;
-          int32 cosPhaseLoEven = phase * loEvenHarmonics + (int32)(radtoinc * pi2);
-          int32 sinPhaseHiEvenPlusTwo = phase * hiEvenHarmonicsPlusTwo;
-          int32 cosPhaseHiEvenPlusTWo = phase * hiEvenHarmonicsPlusTwo + (int32)(radtoinc * pi2);
+          int32_t sinPhaseBase = phase;
+          int32_t cosPhaseBase = phase + (int32_t)(radtoinc * pi2);
+          int32_t sinPhaseLo = phase * loHarmonicsInt;
+          int32_t sinPhaseLoMinusOne = phase * loHarmonicsIntMinusOne;
+          int32_t cosPhaseLo = phase * loHarmonicsInt + (int32_t)(radtoinc * pi2);
+          int32_t sinPhaseHiPlusOne = phase * hiHarmonicsIntPlusOne;
+          int32_t cosPhaseHiPlusOne = phase * hiHarmonicsIntPlusOne + (int32_t)(radtoinc * pi2);
+          int32_t sinPhase2 = phase * 2;
+          int32_t cosPhase2 = phase * 2 + (int32_t)(radtoinc * pi2);
+          int32_t sinPhaseLoEven = phase * loEvenHarmonics;
+          int32_t cosPhaseLoEven = phase * loEvenHarmonics + (int32_t)(radtoinc * pi2);
+          int32_t sinPhaseHiEvenPlusTwo = phase * hiEvenHarmonicsPlusTwo;
+          int32_t cosPhaseHiEvenPlusTWo = phase * hiEvenHarmonicsPlusTwo + (int32_t)(radtoinc * pi2);
           
           float a = pow(slope,loHarmonicsInt) * lookupi1(table0, table1, cosPhaseLo, lomask) - pow(slope,hiHarmonicsIntPlusOne) * lookupi1(table0, table1, cosPhaseHiPlusOne, lomask);
           float b = pow(slope,loHarmonicsInt) * lookupi1(table0, table1, sinPhaseLo, lomask) - pow(slope,hiHarmonicsIntPlusOne) * lookupi1(table0, table1, sinPhaseHiPlusOne, lomask);
@@ -382,28 +383,28 @@ void BLOsc2_next_kkkak(BLOsc2 *unit, int inNumSamples)
     float *table0 = ft->mSineWavetable;
     float *table1 = table0 + 1;
     
-    int32 phase = unit->m_phase;
-    int32 lomask = unit->m_lomask;
+    int32_t phase = unit->m_phase;
+    int32_t lomask = unit->m_lomask;
     
-    int32 phaseinc = (int32)(unit->m_cpstoinc * freqin);
+    int32_t phaseinc = (int32_t)(unit->m_cpstoinc * freqin);
     float radtoinc = unit->m_radtoinc;
     
     
     LOOP1(inNumSamples,
           float loHarmonics = loHarmonicsin;
-          int32 loHarmonicsInt = ceil(loHarmonics);
-          int32 loHarmonicsIntMinusOne = loHarmonicsInt - 1;
+          int32_t loHarmonicsInt = ceil(loHarmonics);
+          int32_t loHarmonicsIntMinusOne = loHarmonicsInt - 1;
           float loHarmonicsFrac = loHarmonicsInt - loHarmonics;
           
           float hiHarmonics = hiHarmonicsin;
-          int32 hiHarmonicsInt = floor(hiHarmonics);
+          int32_t hiHarmonicsInt = floor(hiHarmonics);
           float hiHarmonicsFrac = hiHarmonics - hiHarmonicsInt;
           
-          int32 hiHarmonicsIntPlusOne = hiHarmonicsInt + 1;
-          int32 loEvenHarmonics = loHarmonicsInt%2 == 0? loHarmonicsInt : loHarmonicsInt + 1; // The lowest even harmonic index
-          int32 hiEvenHarmonics = hiHarmonicsInt%2 == 0? hiHarmonicsInt : hiHarmonicsInt - 1; // The highest even harmonic index
-          int32 hiEvenHarmonicsPlusTwo = hiEvenHarmonics + 2;
-          int32 numEvenHarmonics = (hiEvenHarmonics - loEvenHarmonics) / 2 + 1; //The total number of even harmonics
+          int32_t hiHarmonicsIntPlusOne = hiHarmonicsInt + 1;
+          int32_t loEvenHarmonics = loHarmonicsInt%2 == 0? loHarmonicsInt : loHarmonicsInt + 1; // The lowest even harmonic index
+          int32_t hiEvenHarmonics = hiHarmonicsInt%2 == 0? hiHarmonicsInt : hiHarmonicsInt - 1; // The highest even harmonic index
+          int32_t hiEvenHarmonicsPlusTwo = hiEvenHarmonics + 2;
+          int32_t numEvenHarmonics = (hiEvenHarmonics - loEvenHarmonics) / 2 + 1; //The total number of even harmonics
           
           float slope = ZXP(slopein);
           float evenOddRatio = evenOddRatioin;
@@ -415,19 +416,19 @@ void BLOsc2_next_kkkak(BLOsc2 *unit, int inNumSamples)
           float ampFactor = 0.99<slope&&slope<1.01? (hiHarmonicsInt - loHarmonicsInt + 1) - evenOddFactor * numEvenHarmonics + fundamentalAdjust + extraHarmonicsAdjust:((pow(slope,loHarmonicsInt) - pow(slope,hiHarmonicsIntPlusOne)) / (1 - slope)) - (evenOddFactor * (pow(slope, loEvenHarmonics) - pow(slope, hiEvenHarmonicsPlusTwo)) / (1 - pow(slope, 2))) + fundamentalAdjust * pow(slope,loHarmonicsIntMinusOne) + extraHarmonicsAdjust * pow(slope, hiHarmonicsIntPlusOne);
           //ampFactor will be used to normalize the output amplitude. To avoid the denominator of this calculation to be 0 when slope = 1, the different formula is used when slope falls between 0.99 and 1.01.
           
-          int32 sinPhaseBase = phase;
-          int32 cosPhaseBase = phase + (int32)(radtoinc * pi2);
-          int32 sinPhaseLo = phase * loHarmonicsInt;
-          int32 sinPhaseLoMinusOne = phase * loHarmonicsIntMinusOne;
-          int32 cosPhaseLo = phase * loHarmonicsInt + (int32)(radtoinc * pi2);
-          int32 sinPhaseHiPlusOne = phase * hiHarmonicsIntPlusOne;
-          int32 cosPhaseHiPlusOne = phase * hiHarmonicsIntPlusOne + (int32)(radtoinc * pi2);
-          int32 sinPhase2 = phase * 2;
-          int32 cosPhase2 = phase * 2 + (int32)(radtoinc * pi2);
-          int32 sinPhaseLoEven = phase * loEvenHarmonics;
-          int32 cosPhaseLoEven = phase * loEvenHarmonics + (int32)(radtoinc * pi2);
-          int32 sinPhaseHiEvenPlusTwo = phase * hiEvenHarmonicsPlusTwo;
-          int32 cosPhaseHiEvenPlusTWo = phase * hiEvenHarmonicsPlusTwo + (int32)(radtoinc * pi2);
+          int32_t sinPhaseBase = phase;
+          int32_t cosPhaseBase = phase + (int32_t)(radtoinc * pi2);
+          int32_t sinPhaseLo = phase * loHarmonicsInt;
+          int32_t sinPhaseLoMinusOne = phase * loHarmonicsIntMinusOne;
+          int32_t cosPhaseLo = phase * loHarmonicsInt + (int32_t)(radtoinc * pi2);
+          int32_t sinPhaseHiPlusOne = phase * hiHarmonicsIntPlusOne;
+          int32_t cosPhaseHiPlusOne = phase * hiHarmonicsIntPlusOne + (int32_t)(radtoinc * pi2);
+          int32_t sinPhase2 = phase * 2;
+          int32_t cosPhase2 = phase * 2 + (int32_t)(radtoinc * pi2);
+          int32_t sinPhaseLoEven = phase * loEvenHarmonics;
+          int32_t cosPhaseLoEven = phase * loEvenHarmonics + (int32_t)(radtoinc * pi2);
+          int32_t sinPhaseHiEvenPlusTwo = phase * hiEvenHarmonicsPlusTwo;
+          int32_t cosPhaseHiEvenPlusTWo = phase * hiEvenHarmonicsPlusTwo + (int32_t)(radtoinc * pi2);
           
           float a = pow(slope,loHarmonicsInt) * lookupi1(table0, table1, cosPhaseLo, lomask) - pow(slope,hiHarmonicsIntPlusOne) * lookupi1(table0, table1, cosPhaseHiPlusOne, lomask);
           float b = pow(slope,loHarmonicsInt) * lookupi1(table0, table1, sinPhaseLo, lomask) - pow(slope,hiHarmonicsIntPlusOne) * lookupi1(table0, table1, sinPhaseHiPlusOne, lomask);
@@ -461,28 +462,28 @@ void BLOsc2_next_kkkaa(BLOsc2 *unit, int inNumSamples)
     float *table0 = ft->mSineWavetable;
     float *table1 = table0 + 1;
     
-    int32 phase = unit->m_phase;
-    int32 lomask = unit->m_lomask;
+    int32_t phase = unit->m_phase;
+    int32_t lomask = unit->m_lomask;
     
-    int32 phaseinc = (int32)(unit->m_cpstoinc * freqin);
+    int32_t phaseinc = (int32_t)(unit->m_cpstoinc * freqin);
     float radtoinc = unit->m_radtoinc;
     
     
     LOOP1(inNumSamples,
           float loHarmonics = loHarmonicsin;
-          int32 loHarmonicsInt = ceil(loHarmonics);
-          int32 loHarmonicsIntMinusOne = loHarmonicsInt - 1;
+          int32_t loHarmonicsInt = ceil(loHarmonics);
+          int32_t loHarmonicsIntMinusOne = loHarmonicsInt - 1;
           float loHarmonicsFrac = loHarmonicsInt - loHarmonics;
           
           float hiHarmonics = hiHarmonicsin;
-          int32 hiHarmonicsInt = floor(hiHarmonics);
+          int32_t hiHarmonicsInt = floor(hiHarmonics);
           float hiHarmonicsFrac = hiHarmonics - hiHarmonicsInt;
           
-          int32 hiHarmonicsIntPlusOne = hiHarmonicsInt + 1;
-          int32 loEvenHarmonics = loHarmonicsInt%2 == 0? loHarmonicsInt : loHarmonicsInt + 1; // The lowest even harmonic index
-          int32 hiEvenHarmonics = hiHarmonicsInt%2 == 0? hiHarmonicsInt : hiHarmonicsInt - 1; // The highest even harmonic index
-          int32 hiEvenHarmonicsPlusTwo = hiEvenHarmonics + 2;
-          int32 numEvenHarmonics = (hiEvenHarmonics - loEvenHarmonics) / 2 + 1; //The total number of even harmonics
+          int32_t hiHarmonicsIntPlusOne = hiHarmonicsInt + 1;
+          int32_t loEvenHarmonics = loHarmonicsInt%2 == 0? loHarmonicsInt : loHarmonicsInt + 1; // The lowest even harmonic index
+          int32_t hiEvenHarmonics = hiHarmonicsInt%2 == 0? hiHarmonicsInt : hiHarmonicsInt - 1; // The highest even harmonic index
+          int32_t hiEvenHarmonicsPlusTwo = hiEvenHarmonics + 2;
+          int32_t numEvenHarmonics = (hiEvenHarmonics - loEvenHarmonics) / 2 + 1; //The total number of even harmonics
           
           float slope = ZXP(slopein);
           float evenOddRatio = ZXP(evenOddRatioin);
@@ -494,19 +495,19 @@ void BLOsc2_next_kkkaa(BLOsc2 *unit, int inNumSamples)
           float ampFactor = 0.99<slope&&slope<1.01? (hiHarmonicsInt - loHarmonicsInt + 1) - evenOddFactor * numEvenHarmonics + fundamentalAdjust + extraHarmonicsAdjust:((pow(slope,loHarmonicsInt) - pow(slope,hiHarmonicsIntPlusOne)) / (1 - slope)) - (evenOddFactor * (pow(slope, loEvenHarmonics) - pow(slope, hiEvenHarmonicsPlusTwo)) / (1 - pow(slope, 2))) + fundamentalAdjust * pow(slope,loHarmonicsIntMinusOne) + extraHarmonicsAdjust * pow(slope, hiHarmonicsIntPlusOne);
           //ampFactor will be used to normalize the output amplitude. To avoid the denominator of this calculation to be 0 when slope = 1, the different formula is used when slope falls between 0.99 and 1.01.
           
-          int32 sinPhaseBase = phase;
-          int32 cosPhaseBase = phase + (int32)(radtoinc * pi2);
-          int32 sinPhaseLo = phase * loHarmonicsInt;
-          int32 sinPhaseLoMinusOne = phase * loHarmonicsIntMinusOne;
-          int32 cosPhaseLo = phase * loHarmonicsInt + (int32)(radtoinc * pi2);
-          int32 sinPhaseHiPlusOne = phase * hiHarmonicsIntPlusOne;
-          int32 cosPhaseHiPlusOne = phase * hiHarmonicsIntPlusOne + (int32)(radtoinc * pi2);
-          int32 sinPhase2 = phase * 2;
-          int32 cosPhase2 = phase * 2 + (int32)(radtoinc * pi2);
-          int32 sinPhaseLoEven = phase * loEvenHarmonics;
-          int32 cosPhaseLoEven = phase * loEvenHarmonics + (int32)(radtoinc * pi2);
-          int32 sinPhaseHiEvenPlusTwo = phase * hiEvenHarmonicsPlusTwo;
-          int32 cosPhaseHiEvenPlusTWo = phase * hiEvenHarmonicsPlusTwo + (int32)(radtoinc * pi2);
+          int32_t sinPhaseBase = phase;
+          int32_t cosPhaseBase = phase + (int32_t)(radtoinc * pi2);
+          int32_t sinPhaseLo = phase * loHarmonicsInt;
+          int32_t sinPhaseLoMinusOne = phase * loHarmonicsIntMinusOne;
+          int32_t cosPhaseLo = phase * loHarmonicsInt + (int32_t)(radtoinc * pi2);
+          int32_t sinPhaseHiPlusOne = phase * hiHarmonicsIntPlusOne;
+          int32_t cosPhaseHiPlusOne = phase * hiHarmonicsIntPlusOne + (int32_t)(radtoinc * pi2);
+          int32_t sinPhase2 = phase * 2;
+          int32_t cosPhase2 = phase * 2 + (int32_t)(radtoinc * pi2);
+          int32_t sinPhaseLoEven = phase * loEvenHarmonics;
+          int32_t cosPhaseLoEven = phase * loEvenHarmonics + (int32_t)(radtoinc * pi2);
+          int32_t sinPhaseHiEvenPlusTwo = phase * hiEvenHarmonicsPlusTwo;
+          int32_t cosPhaseHiEvenPlusTWo = phase * hiEvenHarmonicsPlusTwo + (int32_t)(radtoinc * pi2);
           
           float a = pow(slope,loHarmonicsInt) * lookupi1(table0, table1, cosPhaseLo, lomask) - pow(slope,hiHarmonicsIntPlusOne) * lookupi1(table0, table1, cosPhaseHiPlusOne, lomask);
           float b = pow(slope,loHarmonicsInt) * lookupi1(table0, table1, sinPhaseLo, lomask) - pow(slope,hiHarmonicsIntPlusOne) * lookupi1(table0, table1, sinPhaseHiPlusOne, lomask);
@@ -540,28 +541,28 @@ void BLOsc2_next_kkakk(BLOsc2 *unit, int inNumSamples)
     float *table0 = ft->mSineWavetable;
     float *table1 = table0 + 1;
     
-    int32 phase = unit->m_phase;
-    int32 lomask = unit->m_lomask;
+    int32_t phase = unit->m_phase;
+    int32_t lomask = unit->m_lomask;
     
-    int32 phaseinc = (int32)(unit->m_cpstoinc * freqin);
+    int32_t phaseinc = (int32_t)(unit->m_cpstoinc * freqin);
     float radtoinc = unit->m_radtoinc;
     
     
     LOOP1(inNumSamples,
           float loHarmonics = loHarmonicsin;
-          int32 loHarmonicsInt = ceil(loHarmonics);
-          int32 loHarmonicsIntMinusOne = loHarmonicsInt - 1;
+          int32_t loHarmonicsInt = ceil(loHarmonics);
+          int32_t loHarmonicsIntMinusOne = loHarmonicsInt - 1;
           float loHarmonicsFrac = loHarmonicsInt - loHarmonics;
           
           float hiHarmonics = ZXP(hiHarmonicsin);
-          int32 hiHarmonicsInt = floor(hiHarmonics);
+          int32_t hiHarmonicsInt = floor(hiHarmonics);
           float hiHarmonicsFrac = hiHarmonics - hiHarmonicsInt;
           
-          int32 hiHarmonicsIntPlusOne = hiHarmonicsInt + 1;
-          int32 loEvenHarmonics = loHarmonicsInt%2 == 0? loHarmonicsInt : loHarmonicsInt + 1; // The lowest even harmonic index
-          int32 hiEvenHarmonics = hiHarmonicsInt%2 == 0? hiHarmonicsInt : hiHarmonicsInt - 1; // The highest even harmonic index
-          int32 hiEvenHarmonicsPlusTwo = hiEvenHarmonics + 2;
-          int32 numEvenHarmonics = (hiEvenHarmonics - loEvenHarmonics) / 2 + 1; //The total number of even harmonics
+          int32_t hiHarmonicsIntPlusOne = hiHarmonicsInt + 1;
+          int32_t loEvenHarmonics = loHarmonicsInt%2 == 0? loHarmonicsInt : loHarmonicsInt + 1; // The lowest even harmonic index
+          int32_t hiEvenHarmonics = hiHarmonicsInt%2 == 0? hiHarmonicsInt : hiHarmonicsInt - 1; // The highest even harmonic index
+          int32_t hiEvenHarmonicsPlusTwo = hiEvenHarmonics + 2;
+          int32_t numEvenHarmonics = (hiEvenHarmonics - loEvenHarmonics) / 2 + 1; //The total number of even harmonics
           
           float slope = slopein;
           float evenOddRatio = evenOddRatioin;
@@ -573,19 +574,19 @@ void BLOsc2_next_kkakk(BLOsc2 *unit, int inNumSamples)
           float ampFactor = 0.99<slope&&slope<1.01? (hiHarmonicsInt - loHarmonicsInt + 1) - evenOddFactor * numEvenHarmonics + fundamentalAdjust + extraHarmonicsAdjust:((pow(slope,loHarmonicsInt) - pow(slope,hiHarmonicsIntPlusOne)) / (1 - slope)) - (evenOddFactor * (pow(slope, loEvenHarmonics) - pow(slope, hiEvenHarmonicsPlusTwo)) / (1 - pow(slope, 2))) + fundamentalAdjust * pow(slope,loHarmonicsIntMinusOne) + extraHarmonicsAdjust * pow(slope, hiHarmonicsIntPlusOne);
           //ampFactor will be used to normalize the output amplitude. To avoid the denominator of this calculation to be 0 when slope = 1, the different formula is used when slope falls between 0.99 and 1.01.
           
-          int32 sinPhaseBase = phase;
-          int32 cosPhaseBase = phase + (int32)(radtoinc * pi2);
-          int32 sinPhaseLo = phase * loHarmonicsInt;
-          int32 sinPhaseLoMinusOne = phase * loHarmonicsIntMinusOne;
-          int32 cosPhaseLo = phase * loHarmonicsInt + (int32)(radtoinc * pi2);
-          int32 sinPhaseHiPlusOne = phase * hiHarmonicsIntPlusOne;
-          int32 cosPhaseHiPlusOne = phase * hiHarmonicsIntPlusOne + (int32)(radtoinc * pi2);
-          int32 sinPhase2 = phase * 2;
-          int32 cosPhase2 = phase * 2 + (int32)(radtoinc * pi2);
-          int32 sinPhaseLoEven = phase * loEvenHarmonics;
-          int32 cosPhaseLoEven = phase * loEvenHarmonics + (int32)(radtoinc * pi2);
-          int32 sinPhaseHiEvenPlusTwo = phase * hiEvenHarmonicsPlusTwo;
-          int32 cosPhaseHiEvenPlusTWo = phase * hiEvenHarmonicsPlusTwo + (int32)(radtoinc * pi2);
+          int32_t sinPhaseBase = phase;
+          int32_t cosPhaseBase = phase + (int32_t)(radtoinc * pi2);
+          int32_t sinPhaseLo = phase * loHarmonicsInt;
+          int32_t sinPhaseLoMinusOne = phase * loHarmonicsIntMinusOne;
+          int32_t cosPhaseLo = phase * loHarmonicsInt + (int32_t)(radtoinc * pi2);
+          int32_t sinPhaseHiPlusOne = phase * hiHarmonicsIntPlusOne;
+          int32_t cosPhaseHiPlusOne = phase * hiHarmonicsIntPlusOne + (int32_t)(radtoinc * pi2);
+          int32_t sinPhase2 = phase * 2;
+          int32_t cosPhase2 = phase * 2 + (int32_t)(radtoinc * pi2);
+          int32_t sinPhaseLoEven = phase * loEvenHarmonics;
+          int32_t cosPhaseLoEven = phase * loEvenHarmonics + (int32_t)(radtoinc * pi2);
+          int32_t sinPhaseHiEvenPlusTwo = phase * hiEvenHarmonicsPlusTwo;
+          int32_t cosPhaseHiEvenPlusTWo = phase * hiEvenHarmonicsPlusTwo + (int32_t)(radtoinc * pi2);
           
           float a = pow(slope,loHarmonicsInt) * lookupi1(table0, table1, cosPhaseLo, lomask) - pow(slope,hiHarmonicsIntPlusOne) * lookupi1(table0, table1, cosPhaseHiPlusOne, lomask);
           float b = pow(slope,loHarmonicsInt) * lookupi1(table0, table1, sinPhaseLo, lomask) - pow(slope,hiHarmonicsIntPlusOne) * lookupi1(table0, table1, sinPhaseHiPlusOne, lomask);
@@ -619,28 +620,28 @@ void BLOsc2_next_kkaka(BLOsc2 *unit, int inNumSamples)
     float *table0 = ft->mSineWavetable;
     float *table1 = table0 + 1;
     
-    int32 phase = unit->m_phase;
-    int32 lomask = unit->m_lomask;
+    int32_t phase = unit->m_phase;
+    int32_t lomask = unit->m_lomask;
     
-    int32 phaseinc = (int32)(unit->m_cpstoinc * freqin);
+    int32_t phaseinc = (int32_t)(unit->m_cpstoinc * freqin);
     float radtoinc = unit->m_radtoinc;
     
     
     LOOP1(inNumSamples,
           float loHarmonics = loHarmonicsin;
-          int32 loHarmonicsInt = ceil(loHarmonics);
-          int32 loHarmonicsIntMinusOne = loHarmonicsInt - 1;
+          int32_t loHarmonicsInt = ceil(loHarmonics);
+          int32_t loHarmonicsIntMinusOne = loHarmonicsInt - 1;
           float loHarmonicsFrac = loHarmonicsInt - loHarmonics;
           
           float hiHarmonics = ZXP(hiHarmonicsin);
-          int32 hiHarmonicsInt = floor(hiHarmonics);
+          int32_t hiHarmonicsInt = floor(hiHarmonics);
           float hiHarmonicsFrac = hiHarmonics - hiHarmonicsInt;
           
-          int32 hiHarmonicsIntPlusOne = hiHarmonicsInt + 1;
-          int32 loEvenHarmonics = loHarmonicsInt%2 == 0? loHarmonicsInt : loHarmonicsInt + 1; // The lowest even harmonic index
-          int32 hiEvenHarmonics = hiHarmonicsInt%2 == 0? hiHarmonicsInt : hiHarmonicsInt - 1; // The highest even harmonic index
-          int32 hiEvenHarmonicsPlusTwo = hiEvenHarmonics + 2;
-          int32 numEvenHarmonics = (hiEvenHarmonics - loEvenHarmonics) / 2 + 1; //The total number of even harmonics
+          int32_t hiHarmonicsIntPlusOne = hiHarmonicsInt + 1;
+          int32_t loEvenHarmonics = loHarmonicsInt%2 == 0? loHarmonicsInt : loHarmonicsInt + 1; // The lowest even harmonic index
+          int32_t hiEvenHarmonics = hiHarmonicsInt%2 == 0? hiHarmonicsInt : hiHarmonicsInt - 1; // The highest even harmonic index
+          int32_t hiEvenHarmonicsPlusTwo = hiEvenHarmonics + 2;
+          int32_t numEvenHarmonics = (hiEvenHarmonics - loEvenHarmonics) / 2 + 1; //The total number of even harmonics
           
           float slope = slopein;
           float evenOddRatio = ZXP(evenOddRatioin);
@@ -652,19 +653,19 @@ void BLOsc2_next_kkaka(BLOsc2 *unit, int inNumSamples)
           float ampFactor = 0.99<slope&&slope<1.01? (hiHarmonicsInt - loHarmonicsInt + 1) - evenOddFactor * numEvenHarmonics + fundamentalAdjust + extraHarmonicsAdjust:((pow(slope,loHarmonicsInt) - pow(slope,hiHarmonicsIntPlusOne)) / (1 - slope)) - (evenOddFactor * (pow(slope, loEvenHarmonics) - pow(slope, hiEvenHarmonicsPlusTwo)) / (1 - pow(slope, 2))) + fundamentalAdjust * pow(slope,loHarmonicsIntMinusOne) + extraHarmonicsAdjust * pow(slope, hiHarmonicsIntPlusOne);
           //ampFactor will be used to normalize the output amplitude. To avoid the denominator of this calculation to be 0 when slope = 1, the different formula is used when slope falls between 0.99 and 1.01.
           
-          int32 sinPhaseBase = phase;
-          int32 cosPhaseBase = phase + (int32)(radtoinc * pi2);
-          int32 sinPhaseLo = phase * loHarmonicsInt;
-          int32 sinPhaseLoMinusOne = phase * loHarmonicsIntMinusOne;
-          int32 cosPhaseLo = phase * loHarmonicsInt + (int32)(radtoinc * pi2);
-          int32 sinPhaseHiPlusOne = phase * hiHarmonicsIntPlusOne;
-          int32 cosPhaseHiPlusOne = phase * hiHarmonicsIntPlusOne + (int32)(radtoinc * pi2);
-          int32 sinPhase2 = phase * 2;
-          int32 cosPhase2 = phase * 2 + (int32)(radtoinc * pi2);
-          int32 sinPhaseLoEven = phase * loEvenHarmonics;
-          int32 cosPhaseLoEven = phase * loEvenHarmonics + (int32)(radtoinc * pi2);
-          int32 sinPhaseHiEvenPlusTwo = phase * hiEvenHarmonicsPlusTwo;
-          int32 cosPhaseHiEvenPlusTWo = phase * hiEvenHarmonicsPlusTwo + (int32)(radtoinc * pi2);
+          int32_t sinPhaseBase = phase;
+          int32_t cosPhaseBase = phase + (int32_t)(radtoinc * pi2);
+          int32_t sinPhaseLo = phase * loHarmonicsInt;
+          int32_t sinPhaseLoMinusOne = phase * loHarmonicsIntMinusOne;
+          int32_t cosPhaseLo = phase * loHarmonicsInt + (int32_t)(radtoinc * pi2);
+          int32_t sinPhaseHiPlusOne = phase * hiHarmonicsIntPlusOne;
+          int32_t cosPhaseHiPlusOne = phase * hiHarmonicsIntPlusOne + (int32_t)(radtoinc * pi2);
+          int32_t sinPhase2 = phase * 2;
+          int32_t cosPhase2 = phase * 2 + (int32_t)(radtoinc * pi2);
+          int32_t sinPhaseLoEven = phase * loEvenHarmonics;
+          int32_t cosPhaseLoEven = phase * loEvenHarmonics + (int32_t)(radtoinc * pi2);
+          int32_t sinPhaseHiEvenPlusTwo = phase * hiEvenHarmonicsPlusTwo;
+          int32_t cosPhaseHiEvenPlusTWo = phase * hiEvenHarmonicsPlusTwo + (int32_t)(radtoinc * pi2);
           
           float a = pow(slope,loHarmonicsInt) * lookupi1(table0, table1, cosPhaseLo, lomask) - pow(slope,hiHarmonicsIntPlusOne) * lookupi1(table0, table1, cosPhaseHiPlusOne, lomask);
           float b = pow(slope,loHarmonicsInt) * lookupi1(table0, table1, sinPhaseLo, lomask) - pow(slope,hiHarmonicsIntPlusOne) * lookupi1(table0, table1, sinPhaseHiPlusOne, lomask);
@@ -698,28 +699,28 @@ void BLOsc2_next_kkaak(BLOsc2 *unit, int inNumSamples)
     float *table0 = ft->mSineWavetable;
     float *table1 = table0 + 1;
     
-    int32 phase = unit->m_phase;
-    int32 lomask = unit->m_lomask;
+    int32_t phase = unit->m_phase;
+    int32_t lomask = unit->m_lomask;
     
-    int32 phaseinc = (int32)(unit->m_cpstoinc * freqin);
+    int32_t phaseinc = (int32_t)(unit->m_cpstoinc * freqin);
     float radtoinc = unit->m_radtoinc;
     
     
     LOOP1(inNumSamples,
           float loHarmonics = loHarmonicsin;
-          int32 loHarmonicsInt = ceil(loHarmonics);
-          int32 loHarmonicsIntMinusOne = loHarmonicsInt - 1;
+          int32_t loHarmonicsInt = ceil(loHarmonics);
+          int32_t loHarmonicsIntMinusOne = loHarmonicsInt - 1;
           float loHarmonicsFrac = loHarmonicsInt - loHarmonics;
           
           float hiHarmonics = ZXP(hiHarmonicsin);
-          int32 hiHarmonicsInt = floor(hiHarmonics);
+          int32_t hiHarmonicsInt = floor(hiHarmonics);
           float hiHarmonicsFrac = hiHarmonics - hiHarmonicsInt;
           
-          int32 hiHarmonicsIntPlusOne = hiHarmonicsInt + 1;
-          int32 loEvenHarmonics = loHarmonicsInt%2 == 0? loHarmonicsInt : loHarmonicsInt + 1; // The lowest even harmonic index
-          int32 hiEvenHarmonics = hiHarmonicsInt%2 == 0? hiHarmonicsInt : hiHarmonicsInt - 1; // The highest even harmonic index
-          int32 hiEvenHarmonicsPlusTwo = hiEvenHarmonics + 2;
-          int32 numEvenHarmonics = (hiEvenHarmonics - loEvenHarmonics) / 2 + 1; //The total number of even harmonics
+          int32_t hiHarmonicsIntPlusOne = hiHarmonicsInt + 1;
+          int32_t loEvenHarmonics = loHarmonicsInt%2 == 0? loHarmonicsInt : loHarmonicsInt + 1; // The lowest even harmonic index
+          int32_t hiEvenHarmonics = hiHarmonicsInt%2 == 0? hiHarmonicsInt : hiHarmonicsInt - 1; // The highest even harmonic index
+          int32_t hiEvenHarmonicsPlusTwo = hiEvenHarmonics + 2;
+          int32_t numEvenHarmonics = (hiEvenHarmonics - loEvenHarmonics) / 2 + 1; //The total number of even harmonics
           
           float slope = ZXP(slopein);
           float evenOddRatio = evenOddRatioin;
@@ -731,19 +732,19 @@ void BLOsc2_next_kkaak(BLOsc2 *unit, int inNumSamples)
           float ampFactor = 0.99<slope&&slope<1.01? (hiHarmonicsInt - loHarmonicsInt + 1) - evenOddFactor * numEvenHarmonics + fundamentalAdjust + extraHarmonicsAdjust:((pow(slope,loHarmonicsInt) - pow(slope,hiHarmonicsIntPlusOne)) / (1 - slope)) - (evenOddFactor * (pow(slope, loEvenHarmonics) - pow(slope, hiEvenHarmonicsPlusTwo)) / (1 - pow(slope, 2))) + fundamentalAdjust * pow(slope,loHarmonicsIntMinusOne) + extraHarmonicsAdjust * pow(slope, hiHarmonicsIntPlusOne);
           //ampFactor will be used to normalize the output amplitude. To avoid the denominator of this calculation to be 0 when slope = 1, the different formula is used when slope falls between 0.99 and 1.01.
           
-          int32 sinPhaseBase = phase;
-          int32 cosPhaseBase = phase + (int32)(radtoinc * pi2);
-          int32 sinPhaseLo = phase * loHarmonicsInt;
-          int32 sinPhaseLoMinusOne = phase * loHarmonicsIntMinusOne;
-          int32 cosPhaseLo = phase * loHarmonicsInt + (int32)(radtoinc * pi2);
-          int32 sinPhaseHiPlusOne = phase * hiHarmonicsIntPlusOne;
-          int32 cosPhaseHiPlusOne = phase * hiHarmonicsIntPlusOne + (int32)(radtoinc * pi2);
-          int32 sinPhase2 = phase * 2;
-          int32 cosPhase2 = phase * 2 + (int32)(radtoinc * pi2);
-          int32 sinPhaseLoEven = phase * loEvenHarmonics;
-          int32 cosPhaseLoEven = phase * loEvenHarmonics + (int32)(radtoinc * pi2);
-          int32 sinPhaseHiEvenPlusTwo = phase * hiEvenHarmonicsPlusTwo;
-          int32 cosPhaseHiEvenPlusTWo = phase * hiEvenHarmonicsPlusTwo + (int32)(radtoinc * pi2);
+          int32_t sinPhaseBase = phase;
+          int32_t cosPhaseBase = phase + (int32_t)(radtoinc * pi2);
+          int32_t sinPhaseLo = phase * loHarmonicsInt;
+          int32_t sinPhaseLoMinusOne = phase * loHarmonicsIntMinusOne;
+          int32_t cosPhaseLo = phase * loHarmonicsInt + (int32_t)(radtoinc * pi2);
+          int32_t sinPhaseHiPlusOne = phase * hiHarmonicsIntPlusOne;
+          int32_t cosPhaseHiPlusOne = phase * hiHarmonicsIntPlusOne + (int32_t)(radtoinc * pi2);
+          int32_t sinPhase2 = phase * 2;
+          int32_t cosPhase2 = phase * 2 + (int32_t)(radtoinc * pi2);
+          int32_t sinPhaseLoEven = phase * loEvenHarmonics;
+          int32_t cosPhaseLoEven = phase * loEvenHarmonics + (int32_t)(radtoinc * pi2);
+          int32_t sinPhaseHiEvenPlusTwo = phase * hiEvenHarmonicsPlusTwo;
+          int32_t cosPhaseHiEvenPlusTWo = phase * hiEvenHarmonicsPlusTwo + (int32_t)(radtoinc * pi2);
           
           float a = pow(slope,loHarmonicsInt) * lookupi1(table0, table1, cosPhaseLo, lomask) - pow(slope,hiHarmonicsIntPlusOne) * lookupi1(table0, table1, cosPhaseHiPlusOne, lomask);
           float b = pow(slope,loHarmonicsInt) * lookupi1(table0, table1, sinPhaseLo, lomask) - pow(slope,hiHarmonicsIntPlusOne) * lookupi1(table0, table1, sinPhaseHiPlusOne, lomask);
@@ -777,28 +778,28 @@ void BLOsc2_next_kkaaa(BLOsc2 *unit, int inNumSamples)
     float *table0 = ft->mSineWavetable;
     float *table1 = table0 + 1;
     
-    int32 phase = unit->m_phase;
-    int32 lomask = unit->m_lomask;
+    int32_t phase = unit->m_phase;
+    int32_t lomask = unit->m_lomask;
     
-    int32 phaseinc = (int32)(unit->m_cpstoinc * freqin);
+    int32_t phaseinc = (int32_t)(unit->m_cpstoinc * freqin);
     float radtoinc = unit->m_radtoinc;
     
     
     LOOP1(inNumSamples,
           float loHarmonics = loHarmonicsin;
-          int32 loHarmonicsInt = ceil(loHarmonics);
-          int32 loHarmonicsIntMinusOne = loHarmonicsInt - 1;
+          int32_t loHarmonicsInt = ceil(loHarmonics);
+          int32_t loHarmonicsIntMinusOne = loHarmonicsInt - 1;
           float loHarmonicsFrac = loHarmonicsInt - loHarmonics;
           
           float hiHarmonics = ZXP(hiHarmonicsin);
-          int32 hiHarmonicsInt = floor(hiHarmonics);
+          int32_t hiHarmonicsInt = floor(hiHarmonics);
           float hiHarmonicsFrac = hiHarmonics - hiHarmonicsInt;
           
-          int32 hiHarmonicsIntPlusOne = hiHarmonicsInt + 1;
-          int32 loEvenHarmonics = loHarmonicsInt%2 == 0? loHarmonicsInt : loHarmonicsInt + 1; // The lowest even harmonic index
-          int32 hiEvenHarmonics = hiHarmonicsInt%2 == 0? hiHarmonicsInt : hiHarmonicsInt - 1; // The highest even harmonic index
-          int32 hiEvenHarmonicsPlusTwo = hiEvenHarmonics + 2;
-          int32 numEvenHarmonics = (hiEvenHarmonics - loEvenHarmonics) / 2 + 1; //The total number of even harmonics
+          int32_t hiHarmonicsIntPlusOne = hiHarmonicsInt + 1;
+          int32_t loEvenHarmonics = loHarmonicsInt%2 == 0? loHarmonicsInt : loHarmonicsInt + 1; // The lowest even harmonic index
+          int32_t hiEvenHarmonics = hiHarmonicsInt%2 == 0? hiHarmonicsInt : hiHarmonicsInt - 1; // The highest even harmonic index
+          int32_t hiEvenHarmonicsPlusTwo = hiEvenHarmonics + 2;
+          int32_t numEvenHarmonics = (hiEvenHarmonics - loEvenHarmonics) / 2 + 1; //The total number of even harmonics
           
           float slope = ZXP(slopein);
           float evenOddRatio = ZXP(evenOddRatioin);
@@ -810,19 +811,19 @@ void BLOsc2_next_kkaaa(BLOsc2 *unit, int inNumSamples)
           float ampFactor = 0.99<slope&&slope<1.01? (hiHarmonicsInt - loHarmonicsInt + 1) - evenOddFactor * numEvenHarmonics + fundamentalAdjust + extraHarmonicsAdjust:((pow(slope,loHarmonicsInt) - pow(slope,hiHarmonicsIntPlusOne)) / (1 - slope)) - (evenOddFactor * (pow(slope, loEvenHarmonics) - pow(slope, hiEvenHarmonicsPlusTwo)) / (1 - pow(slope, 2))) + fundamentalAdjust * pow(slope,loHarmonicsIntMinusOne) + extraHarmonicsAdjust * pow(slope, hiHarmonicsIntPlusOne);
           //ampFactor will be used to normalize the output amplitude. To avoid the denominator of this calculation to be 0 when slope = 1, the different formula is used when slope falls between 0.99 and 1.01.
           
-          int32 sinPhaseBase = phase;
-          int32 cosPhaseBase = phase + (int32)(radtoinc * pi2);
-          int32 sinPhaseLo = phase * loHarmonicsInt;
-          int32 sinPhaseLoMinusOne = phase * loHarmonicsIntMinusOne;
-          int32 cosPhaseLo = phase * loHarmonicsInt + (int32)(radtoinc * pi2);
-          int32 sinPhaseHiPlusOne = phase * hiHarmonicsIntPlusOne;
-          int32 cosPhaseHiPlusOne = phase * hiHarmonicsIntPlusOne + (int32)(radtoinc * pi2);
-          int32 sinPhase2 = phase * 2;
-          int32 cosPhase2 = phase * 2 + (int32)(radtoinc * pi2);
-          int32 sinPhaseLoEven = phase * loEvenHarmonics;
-          int32 cosPhaseLoEven = phase * loEvenHarmonics + (int32)(radtoinc * pi2);
-          int32 sinPhaseHiEvenPlusTwo = phase * hiEvenHarmonicsPlusTwo;
-          int32 cosPhaseHiEvenPlusTWo = phase * hiEvenHarmonicsPlusTwo + (int32)(radtoinc * pi2);
+          int32_t sinPhaseBase = phase;
+          int32_t cosPhaseBase = phase + (int32_t)(radtoinc * pi2);
+          int32_t sinPhaseLo = phase * loHarmonicsInt;
+          int32_t sinPhaseLoMinusOne = phase * loHarmonicsIntMinusOne;
+          int32_t cosPhaseLo = phase * loHarmonicsInt + (int32_t)(radtoinc * pi2);
+          int32_t sinPhaseHiPlusOne = phase * hiHarmonicsIntPlusOne;
+          int32_t cosPhaseHiPlusOne = phase * hiHarmonicsIntPlusOne + (int32_t)(radtoinc * pi2);
+          int32_t sinPhase2 = phase * 2;
+          int32_t cosPhase2 = phase * 2 + (int32_t)(radtoinc * pi2);
+          int32_t sinPhaseLoEven = phase * loEvenHarmonics;
+          int32_t cosPhaseLoEven = phase * loEvenHarmonics + (int32_t)(radtoinc * pi2);
+          int32_t sinPhaseHiEvenPlusTwo = phase * hiEvenHarmonicsPlusTwo;
+          int32_t cosPhaseHiEvenPlusTWo = phase * hiEvenHarmonicsPlusTwo + (int32_t)(radtoinc * pi2);
           
           float a = pow(slope,loHarmonicsInt) * lookupi1(table0, table1, cosPhaseLo, lomask) - pow(slope,hiHarmonicsIntPlusOne) * lookupi1(table0, table1, cosPhaseHiPlusOne, lomask);
           float b = pow(slope,loHarmonicsInt) * lookupi1(table0, table1, sinPhaseLo, lomask) - pow(slope,hiHarmonicsIntPlusOne) * lookupi1(table0, table1, sinPhaseHiPlusOne, lomask);
@@ -856,28 +857,28 @@ void BLOsc2_next_kakkk(BLOsc2 *unit, int inNumSamples)
     float *table0 = ft->mSineWavetable;
     float *table1 = table0 + 1;
     
-    int32 phase = unit->m_phase;
-    int32 lomask = unit->m_lomask;
+    int32_t phase = unit->m_phase;
+    int32_t lomask = unit->m_lomask;
     
-    int32 phaseinc = (int32)(unit->m_cpstoinc * freqin);
+    int32_t phaseinc = (int32_t)(unit->m_cpstoinc * freqin);
     float radtoinc = unit->m_radtoinc;
     
     
     LOOP1(inNumSamples,
           float loHarmonics = ZXP(loHarmonicsin);
-          int32 loHarmonicsInt = ceil(loHarmonics);
-          int32 loHarmonicsIntMinusOne = loHarmonicsInt - 1;
+          int32_t loHarmonicsInt = ceil(loHarmonics);
+          int32_t loHarmonicsIntMinusOne = loHarmonicsInt - 1;
           float loHarmonicsFrac = loHarmonicsInt - loHarmonics;
           
           float hiHarmonics = hiHarmonicsin;
-          int32 hiHarmonicsInt = floor(hiHarmonics);
+          int32_t hiHarmonicsInt = floor(hiHarmonics);
           float hiHarmonicsFrac = hiHarmonics - hiHarmonicsInt;
           
-          int32 hiHarmonicsIntPlusOne = hiHarmonicsInt + 1;
-          int32 loEvenHarmonics = loHarmonicsInt%2 == 0? loHarmonicsInt : loHarmonicsInt + 1; // The lowest even harmonic index
-          int32 hiEvenHarmonics = hiHarmonicsInt%2 == 0? hiHarmonicsInt : hiHarmonicsInt - 1; // The highest even harmonic index
-          int32 hiEvenHarmonicsPlusTwo = hiEvenHarmonics + 2;
-          int32 numEvenHarmonics = (hiEvenHarmonics - loEvenHarmonics) / 2 + 1; //The total number of even harmonics
+          int32_t hiHarmonicsIntPlusOne = hiHarmonicsInt + 1;
+          int32_t loEvenHarmonics = loHarmonicsInt%2 == 0? loHarmonicsInt : loHarmonicsInt + 1; // The lowest even harmonic index
+          int32_t hiEvenHarmonics = hiHarmonicsInt%2 == 0? hiHarmonicsInt : hiHarmonicsInt - 1; // The highest even harmonic index
+          int32_t hiEvenHarmonicsPlusTwo = hiEvenHarmonics + 2;
+          int32_t numEvenHarmonics = (hiEvenHarmonics - loEvenHarmonics) / 2 + 1; //The total number of even harmonics
           
           float slope = slopein;
           float evenOddRatio = evenOddRatioin;
@@ -889,19 +890,19 @@ void BLOsc2_next_kakkk(BLOsc2 *unit, int inNumSamples)
           float ampFactor = 0.99<slope&&slope<1.01? (hiHarmonicsInt - loHarmonicsInt + 1) - evenOddFactor * numEvenHarmonics + fundamentalAdjust + extraHarmonicsAdjust:((pow(slope,loHarmonicsInt) - pow(slope,hiHarmonicsIntPlusOne)) / (1 - slope)) - (evenOddFactor * (pow(slope, loEvenHarmonics) - pow(slope, hiEvenHarmonicsPlusTwo)) / (1 - pow(slope, 2))) + fundamentalAdjust * pow(slope,loHarmonicsIntMinusOne) + extraHarmonicsAdjust * pow(slope, hiHarmonicsIntPlusOne);
           //ampFactor will be used to normalize the output amplitude. To avoid the denominator of this calculation to be 0 when slope = 1, the different formula is used when slope falls between 0.99 and 1.01.
           
-          int32 sinPhaseBase = phase;
-          int32 cosPhaseBase = phase + (int32)(radtoinc * pi2);
-          int32 sinPhaseLo = phase * loHarmonicsInt;
-          int32 sinPhaseLoMinusOne = phase * loHarmonicsIntMinusOne;
-          int32 cosPhaseLo = phase * loHarmonicsInt + (int32)(radtoinc * pi2);
-          int32 sinPhaseHiPlusOne = phase * hiHarmonicsIntPlusOne;
-          int32 cosPhaseHiPlusOne = phase * hiHarmonicsIntPlusOne + (int32)(radtoinc * pi2);
-          int32 sinPhase2 = phase * 2;
-          int32 cosPhase2 = phase * 2 + (int32)(radtoinc * pi2);
-          int32 sinPhaseLoEven = phase * loEvenHarmonics;
-          int32 cosPhaseLoEven = phase * loEvenHarmonics + (int32)(radtoinc * pi2);
-          int32 sinPhaseHiEvenPlusTwo = phase * hiEvenHarmonicsPlusTwo;
-          int32 cosPhaseHiEvenPlusTWo = phase * hiEvenHarmonicsPlusTwo + (int32)(radtoinc * pi2);
+          int32_t sinPhaseBase = phase;
+          int32_t cosPhaseBase = phase + (int32_t)(radtoinc * pi2);
+          int32_t sinPhaseLo = phase * loHarmonicsInt;
+          int32_t sinPhaseLoMinusOne = phase * loHarmonicsIntMinusOne;
+          int32_t cosPhaseLo = phase * loHarmonicsInt + (int32_t)(radtoinc * pi2);
+          int32_t sinPhaseHiPlusOne = phase * hiHarmonicsIntPlusOne;
+          int32_t cosPhaseHiPlusOne = phase * hiHarmonicsIntPlusOne + (int32_t)(radtoinc * pi2);
+          int32_t sinPhase2 = phase * 2;
+          int32_t cosPhase2 = phase * 2 + (int32_t)(radtoinc * pi2);
+          int32_t sinPhaseLoEven = phase * loEvenHarmonics;
+          int32_t cosPhaseLoEven = phase * loEvenHarmonics + (int32_t)(radtoinc * pi2);
+          int32_t sinPhaseHiEvenPlusTwo = phase * hiEvenHarmonicsPlusTwo;
+          int32_t cosPhaseHiEvenPlusTWo = phase * hiEvenHarmonicsPlusTwo + (int32_t)(radtoinc * pi2);
           
           float a = pow(slope,loHarmonicsInt) * lookupi1(table0, table1, cosPhaseLo, lomask) - pow(slope,hiHarmonicsIntPlusOne) * lookupi1(table0, table1, cosPhaseHiPlusOne, lomask);
           float b = pow(slope,loHarmonicsInt) * lookupi1(table0, table1, sinPhaseLo, lomask) - pow(slope,hiHarmonicsIntPlusOne) * lookupi1(table0, table1, sinPhaseHiPlusOne, lomask);
@@ -935,28 +936,28 @@ void BLOsc2_next_kakka(BLOsc2 *unit, int inNumSamples)
     float *table0 = ft->mSineWavetable;
     float *table1 = table0 + 1;
     
-    int32 phase = unit->m_phase;
-    int32 lomask = unit->m_lomask;
+    int32_t phase = unit->m_phase;
+    int32_t lomask = unit->m_lomask;
     
-    int32 phaseinc = (int32)(unit->m_cpstoinc * freqin);
+    int32_t phaseinc = (int32_t)(unit->m_cpstoinc * freqin);
     float radtoinc = unit->m_radtoinc;
     
     
     LOOP1(inNumSamples,
           float loHarmonics = ZXP(loHarmonicsin);
-          int32 loHarmonicsInt = ceil(loHarmonics);
-          int32 loHarmonicsIntMinusOne = loHarmonicsInt - 1;
+          int32_t loHarmonicsInt = ceil(loHarmonics);
+          int32_t loHarmonicsIntMinusOne = loHarmonicsInt - 1;
           float loHarmonicsFrac = loHarmonicsInt - loHarmonics;
           
           float hiHarmonics = hiHarmonicsin;
-          int32 hiHarmonicsInt = floor(hiHarmonics);
+          int32_t hiHarmonicsInt = floor(hiHarmonics);
           float hiHarmonicsFrac = hiHarmonics - hiHarmonicsInt;
           
-          int32 hiHarmonicsIntPlusOne = hiHarmonicsInt + 1;
-          int32 loEvenHarmonics = loHarmonicsInt%2 == 0? loHarmonicsInt : loHarmonicsInt + 1; // The lowest even harmonic index
-          int32 hiEvenHarmonics = hiHarmonicsInt%2 == 0? hiHarmonicsInt : hiHarmonicsInt - 1; // The highest even harmonic index
-          int32 hiEvenHarmonicsPlusTwo = hiEvenHarmonics + 2;
-          int32 numEvenHarmonics = (hiEvenHarmonics - loEvenHarmonics) / 2 + 1; //The total number of even harmonics
+          int32_t hiHarmonicsIntPlusOne = hiHarmonicsInt + 1;
+          int32_t loEvenHarmonics = loHarmonicsInt%2 == 0? loHarmonicsInt : loHarmonicsInt + 1; // The lowest even harmonic index
+          int32_t hiEvenHarmonics = hiHarmonicsInt%2 == 0? hiHarmonicsInt : hiHarmonicsInt - 1; // The highest even harmonic index
+          int32_t hiEvenHarmonicsPlusTwo = hiEvenHarmonics + 2;
+          int32_t numEvenHarmonics = (hiEvenHarmonics - loEvenHarmonics) / 2 + 1; //The total number of even harmonics
           
           float slope = slopein;
           float evenOddRatio = ZXP(evenOddRatioin);
@@ -968,19 +969,19 @@ void BLOsc2_next_kakka(BLOsc2 *unit, int inNumSamples)
           float ampFactor = 0.99<slope&&slope<1.01? (hiHarmonicsInt - loHarmonicsInt + 1) - evenOddFactor * numEvenHarmonics + fundamentalAdjust + extraHarmonicsAdjust:((pow(slope,loHarmonicsInt) - pow(slope,hiHarmonicsIntPlusOne)) / (1 - slope)) - (evenOddFactor * (pow(slope, loEvenHarmonics) - pow(slope, hiEvenHarmonicsPlusTwo)) / (1 - pow(slope, 2))) + fundamentalAdjust * pow(slope,loHarmonicsIntMinusOne) + extraHarmonicsAdjust * pow(slope, hiHarmonicsIntPlusOne);
           //ampFactor will be used to normalize the output amplitude. To avoid the denominator of this calculation to be 0 when slope = 1, the different formula is used when slope falls between 0.99 and 1.01.
           
-          int32 sinPhaseBase = phase;
-          int32 cosPhaseBase = phase + (int32)(radtoinc * pi2);
-          int32 sinPhaseLo = phase * loHarmonicsInt;
-          int32 sinPhaseLoMinusOne = phase * loHarmonicsIntMinusOne;
-          int32 cosPhaseLo = phase * loHarmonicsInt + (int32)(radtoinc * pi2);
-          int32 sinPhaseHiPlusOne = phase * hiHarmonicsIntPlusOne;
-          int32 cosPhaseHiPlusOne = phase * hiHarmonicsIntPlusOne + (int32)(radtoinc * pi2);
-          int32 sinPhase2 = phase * 2;
-          int32 cosPhase2 = phase * 2 + (int32)(radtoinc * pi2);
-          int32 sinPhaseLoEven = phase * loEvenHarmonics;
-          int32 cosPhaseLoEven = phase * loEvenHarmonics + (int32)(radtoinc * pi2);
-          int32 sinPhaseHiEvenPlusTwo = phase * hiEvenHarmonicsPlusTwo;
-          int32 cosPhaseHiEvenPlusTWo = phase * hiEvenHarmonicsPlusTwo + (int32)(radtoinc * pi2);
+          int32_t sinPhaseBase = phase;
+          int32_t cosPhaseBase = phase + (int32_t)(radtoinc * pi2);
+          int32_t sinPhaseLo = phase * loHarmonicsInt;
+          int32_t sinPhaseLoMinusOne = phase * loHarmonicsIntMinusOne;
+          int32_t cosPhaseLo = phase * loHarmonicsInt + (int32_t)(radtoinc * pi2);
+          int32_t sinPhaseHiPlusOne = phase * hiHarmonicsIntPlusOne;
+          int32_t cosPhaseHiPlusOne = phase * hiHarmonicsIntPlusOne + (int32_t)(radtoinc * pi2);
+          int32_t sinPhase2 = phase * 2;
+          int32_t cosPhase2 = phase * 2 + (int32_t)(radtoinc * pi2);
+          int32_t sinPhaseLoEven = phase * loEvenHarmonics;
+          int32_t cosPhaseLoEven = phase * loEvenHarmonics + (int32_t)(radtoinc * pi2);
+          int32_t sinPhaseHiEvenPlusTwo = phase * hiEvenHarmonicsPlusTwo;
+          int32_t cosPhaseHiEvenPlusTWo = phase * hiEvenHarmonicsPlusTwo + (int32_t)(radtoinc * pi2);
           
           float a = pow(slope,loHarmonicsInt) * lookupi1(table0, table1, cosPhaseLo, lomask) - pow(slope,hiHarmonicsIntPlusOne) * lookupi1(table0, table1, cosPhaseHiPlusOne, lomask);
           float b = pow(slope,loHarmonicsInt) * lookupi1(table0, table1, sinPhaseLo, lomask) - pow(slope,hiHarmonicsIntPlusOne) * lookupi1(table0, table1, sinPhaseHiPlusOne, lomask);
@@ -1014,28 +1015,28 @@ void BLOsc2_next_kakak(BLOsc2 *unit, int inNumSamples)
     float *table0 = ft->mSineWavetable;
     float *table1 = table0 + 1;
     
-    int32 phase = unit->m_phase;
-    int32 lomask = unit->m_lomask;
+    int32_t phase = unit->m_phase;
+    int32_t lomask = unit->m_lomask;
     
-    int32 phaseinc = (int32)(unit->m_cpstoinc * freqin);
+    int32_t phaseinc = (int32_t)(unit->m_cpstoinc * freqin);
     float radtoinc = unit->m_radtoinc;
     
     
     LOOP1(inNumSamples,
           float loHarmonics = ZXP(loHarmonicsin);
-          int32 loHarmonicsInt = ceil(loHarmonics);
-          int32 loHarmonicsIntMinusOne = loHarmonicsInt - 1;
+          int32_t loHarmonicsInt = ceil(loHarmonics);
+          int32_t loHarmonicsIntMinusOne = loHarmonicsInt - 1;
           float loHarmonicsFrac = loHarmonicsInt - loHarmonics;
           
           float hiHarmonics = hiHarmonicsin;
-          int32 hiHarmonicsInt = floor(hiHarmonics);
+          int32_t hiHarmonicsInt = floor(hiHarmonics);
           float hiHarmonicsFrac = hiHarmonics - hiHarmonicsInt;
           
-          int32 hiHarmonicsIntPlusOne = hiHarmonicsInt + 1;
-          int32 loEvenHarmonics = loHarmonicsInt%2 == 0? loHarmonicsInt : loHarmonicsInt + 1; // The lowest even harmonic index
-          int32 hiEvenHarmonics = hiHarmonicsInt%2 == 0? hiHarmonicsInt : hiHarmonicsInt - 1; // The highest even harmonic index
-          int32 hiEvenHarmonicsPlusTwo = hiEvenHarmonics + 2;
-          int32 numEvenHarmonics = (hiEvenHarmonics - loEvenHarmonics) / 2 + 1; //The total number of even harmonics
+          int32_t hiHarmonicsIntPlusOne = hiHarmonicsInt + 1;
+          int32_t loEvenHarmonics = loHarmonicsInt%2 == 0? loHarmonicsInt : loHarmonicsInt + 1; // The lowest even harmonic index
+          int32_t hiEvenHarmonics = hiHarmonicsInt%2 == 0? hiHarmonicsInt : hiHarmonicsInt - 1; // The highest even harmonic index
+          int32_t hiEvenHarmonicsPlusTwo = hiEvenHarmonics + 2;
+          int32_t numEvenHarmonics = (hiEvenHarmonics - loEvenHarmonics) / 2 + 1; //The total number of even harmonics
           
           float slope = ZXP(slopein);
           float evenOddRatio = evenOddRatioin;
@@ -1047,19 +1048,19 @@ void BLOsc2_next_kakak(BLOsc2 *unit, int inNumSamples)
           float ampFactor = 0.99<slope&&slope<1.01? (hiHarmonicsInt - loHarmonicsInt + 1) - evenOddFactor * numEvenHarmonics + fundamentalAdjust + extraHarmonicsAdjust:((pow(slope,loHarmonicsInt) - pow(slope,hiHarmonicsIntPlusOne)) / (1 - slope)) - (evenOddFactor * (pow(slope, loEvenHarmonics) - pow(slope, hiEvenHarmonicsPlusTwo)) / (1 - pow(slope, 2))) + fundamentalAdjust * pow(slope,loHarmonicsIntMinusOne) + extraHarmonicsAdjust * pow(slope, hiHarmonicsIntPlusOne);
           //ampFactor will be used to normalize the output amplitude. To avoid the denominator of this calculation to be 0 when slope = 1, the different formula is used when slope falls between 0.99 and 1.01.
           
-          int32 sinPhaseBase = phase;
-          int32 cosPhaseBase = phase + (int32)(radtoinc * pi2);
-          int32 sinPhaseLo = phase * loHarmonicsInt;
-          int32 sinPhaseLoMinusOne = phase * loHarmonicsIntMinusOne;
-          int32 cosPhaseLo = phase * loHarmonicsInt + (int32)(radtoinc * pi2);
-          int32 sinPhaseHiPlusOne = phase * hiHarmonicsIntPlusOne;
-          int32 cosPhaseHiPlusOne = phase * hiHarmonicsIntPlusOne + (int32)(radtoinc * pi2);
-          int32 sinPhase2 = phase * 2;
-          int32 cosPhase2 = phase * 2 + (int32)(radtoinc * pi2);
-          int32 sinPhaseLoEven = phase * loEvenHarmonics;
-          int32 cosPhaseLoEven = phase * loEvenHarmonics + (int32)(radtoinc * pi2);
-          int32 sinPhaseHiEvenPlusTwo = phase * hiEvenHarmonicsPlusTwo;
-          int32 cosPhaseHiEvenPlusTWo = phase * hiEvenHarmonicsPlusTwo + (int32)(radtoinc * pi2);
+          int32_t sinPhaseBase = phase;
+          int32_t cosPhaseBase = phase + (int32_t)(radtoinc * pi2);
+          int32_t sinPhaseLo = phase * loHarmonicsInt;
+          int32_t sinPhaseLoMinusOne = phase * loHarmonicsIntMinusOne;
+          int32_t cosPhaseLo = phase * loHarmonicsInt + (int32_t)(radtoinc * pi2);
+          int32_t sinPhaseHiPlusOne = phase * hiHarmonicsIntPlusOne;
+          int32_t cosPhaseHiPlusOne = phase * hiHarmonicsIntPlusOne + (int32_t)(radtoinc * pi2);
+          int32_t sinPhase2 = phase * 2;
+          int32_t cosPhase2 = phase * 2 + (int32_t)(radtoinc * pi2);
+          int32_t sinPhaseLoEven = phase * loEvenHarmonics;
+          int32_t cosPhaseLoEven = phase * loEvenHarmonics + (int32_t)(radtoinc * pi2);
+          int32_t sinPhaseHiEvenPlusTwo = phase * hiEvenHarmonicsPlusTwo;
+          int32_t cosPhaseHiEvenPlusTWo = phase * hiEvenHarmonicsPlusTwo + (int32_t)(radtoinc * pi2);
           
           float a = pow(slope,loHarmonicsInt) * lookupi1(table0, table1, cosPhaseLo, lomask) - pow(slope,hiHarmonicsIntPlusOne) * lookupi1(table0, table1, cosPhaseHiPlusOne, lomask);
           float b = pow(slope,loHarmonicsInt) * lookupi1(table0, table1, sinPhaseLo, lomask) - pow(slope,hiHarmonicsIntPlusOne) * lookupi1(table0, table1, sinPhaseHiPlusOne, lomask);
@@ -1093,28 +1094,28 @@ void BLOsc2_next_kakaa(BLOsc2 *unit, int inNumSamples)
     float *table0 = ft->mSineWavetable;
     float *table1 = table0 + 1;
     
-    int32 phase = unit->m_phase;
-    int32 lomask = unit->m_lomask;
+    int32_t phase = unit->m_phase;
+    int32_t lomask = unit->m_lomask;
     
-    int32 phaseinc = (int32)(unit->m_cpstoinc * freqin);
+    int32_t phaseinc = (int32_t)(unit->m_cpstoinc * freqin);
     float radtoinc = unit->m_radtoinc;
     
     
     LOOP1(inNumSamples,
           float loHarmonics = ZXP(loHarmonicsin);
-          int32 loHarmonicsInt = ceil(loHarmonics);
-          int32 loHarmonicsIntMinusOne = loHarmonicsInt - 1;
+          int32_t loHarmonicsInt = ceil(loHarmonics);
+          int32_t loHarmonicsIntMinusOne = loHarmonicsInt - 1;
           float loHarmonicsFrac = loHarmonicsInt - loHarmonics;
           
           float hiHarmonics = hiHarmonicsin;
-          int32 hiHarmonicsInt = floor(hiHarmonics);
+          int32_t hiHarmonicsInt = floor(hiHarmonics);
           float hiHarmonicsFrac = hiHarmonics - hiHarmonicsInt;
           
-          int32 hiHarmonicsIntPlusOne = hiHarmonicsInt + 1;
-          int32 loEvenHarmonics = loHarmonicsInt%2 == 0? loHarmonicsInt : loHarmonicsInt + 1; // The lowest even harmonic index
-          int32 hiEvenHarmonics = hiHarmonicsInt%2 == 0? hiHarmonicsInt : hiHarmonicsInt - 1; // The highest even harmonic index
-          int32 hiEvenHarmonicsPlusTwo = hiEvenHarmonics + 2;
-          int32 numEvenHarmonics = (hiEvenHarmonics - loEvenHarmonics) / 2 + 1; //The total number of even harmonics
+          int32_t hiHarmonicsIntPlusOne = hiHarmonicsInt + 1;
+          int32_t loEvenHarmonics = loHarmonicsInt%2 == 0? loHarmonicsInt : loHarmonicsInt + 1; // The lowest even harmonic index
+          int32_t hiEvenHarmonics = hiHarmonicsInt%2 == 0? hiHarmonicsInt : hiHarmonicsInt - 1; // The highest even harmonic index
+          int32_t hiEvenHarmonicsPlusTwo = hiEvenHarmonics + 2;
+          int32_t numEvenHarmonics = (hiEvenHarmonics - loEvenHarmonics) / 2 + 1; //The total number of even harmonics
           
           float slope = ZXP(slopein);
           float evenOddRatio = ZXP(evenOddRatioin);
@@ -1126,19 +1127,19 @@ void BLOsc2_next_kakaa(BLOsc2 *unit, int inNumSamples)
           float ampFactor = 0.99<slope&&slope<1.01? (hiHarmonicsInt - loHarmonicsInt + 1) - evenOddFactor * numEvenHarmonics + fundamentalAdjust + extraHarmonicsAdjust:((pow(slope,loHarmonicsInt) - pow(slope,hiHarmonicsIntPlusOne)) / (1 - slope)) - (evenOddFactor * (pow(slope, loEvenHarmonics) - pow(slope, hiEvenHarmonicsPlusTwo)) / (1 - pow(slope, 2))) + fundamentalAdjust * pow(slope,loHarmonicsIntMinusOne) + extraHarmonicsAdjust * pow(slope, hiHarmonicsIntPlusOne);
           //ampFactor will be used to normalize the output amplitude. To avoid the denominator of this calculation to be 0 when slope = 1, the different formula is used when slope falls between 0.99 and 1.01.
           
-          int32 sinPhaseBase = phase;
-          int32 cosPhaseBase = phase + (int32)(radtoinc * pi2);
-          int32 sinPhaseLo = phase * loHarmonicsInt;
-          int32 sinPhaseLoMinusOne = phase * loHarmonicsIntMinusOne;
-          int32 cosPhaseLo = phase * loHarmonicsInt + (int32)(radtoinc * pi2);
-          int32 sinPhaseHiPlusOne = phase * hiHarmonicsIntPlusOne;
-          int32 cosPhaseHiPlusOne = phase * hiHarmonicsIntPlusOne + (int32)(radtoinc * pi2);
-          int32 sinPhase2 = phase * 2;
-          int32 cosPhase2 = phase * 2 + (int32)(radtoinc * pi2);
-          int32 sinPhaseLoEven = phase * loEvenHarmonics;
-          int32 cosPhaseLoEven = phase * loEvenHarmonics + (int32)(radtoinc * pi2);
-          int32 sinPhaseHiEvenPlusTwo = phase * hiEvenHarmonicsPlusTwo;
-          int32 cosPhaseHiEvenPlusTWo = phase * hiEvenHarmonicsPlusTwo + (int32)(radtoinc * pi2);
+          int32_t sinPhaseBase = phase;
+          int32_t cosPhaseBase = phase + (int32_t)(radtoinc * pi2);
+          int32_t sinPhaseLo = phase * loHarmonicsInt;
+          int32_t sinPhaseLoMinusOne = phase * loHarmonicsIntMinusOne;
+          int32_t cosPhaseLo = phase * loHarmonicsInt + (int32_t)(radtoinc * pi2);
+          int32_t sinPhaseHiPlusOne = phase * hiHarmonicsIntPlusOne;
+          int32_t cosPhaseHiPlusOne = phase * hiHarmonicsIntPlusOne + (int32_t)(radtoinc * pi2);
+          int32_t sinPhase2 = phase * 2;
+          int32_t cosPhase2 = phase * 2 + (int32_t)(radtoinc * pi2);
+          int32_t sinPhaseLoEven = phase * loEvenHarmonics;
+          int32_t cosPhaseLoEven = phase * loEvenHarmonics + (int32_t)(radtoinc * pi2);
+          int32_t sinPhaseHiEvenPlusTwo = phase * hiEvenHarmonicsPlusTwo;
+          int32_t cosPhaseHiEvenPlusTWo = phase * hiEvenHarmonicsPlusTwo + (int32_t)(radtoinc * pi2);
           
           float a = pow(slope,loHarmonicsInt) * lookupi1(table0, table1, cosPhaseLo, lomask) - pow(slope,hiHarmonicsIntPlusOne) * lookupi1(table0, table1, cosPhaseHiPlusOne, lomask);
           float b = pow(slope,loHarmonicsInt) * lookupi1(table0, table1, sinPhaseLo, lomask) - pow(slope,hiHarmonicsIntPlusOne) * lookupi1(table0, table1, sinPhaseHiPlusOne, lomask);
@@ -1172,28 +1173,28 @@ void BLOsc2_next_kaakk(BLOsc2 *unit, int inNumSamples)
     float *table0 = ft->mSineWavetable;
     float *table1 = table0 + 1;
     
-    int32 phase = unit->m_phase;
-    int32 lomask = unit->m_lomask;
+    int32_t phase = unit->m_phase;
+    int32_t lomask = unit->m_lomask;
     
-    int32 phaseinc = (int32)(unit->m_cpstoinc * freqin);
+    int32_t phaseinc = (int32_t)(unit->m_cpstoinc * freqin);
     float radtoinc = unit->m_radtoinc;
     
     
     LOOP1(inNumSamples,
           float loHarmonics = ZXP(loHarmonicsin);
-          int32 loHarmonicsInt = ceil(loHarmonics);
-          int32 loHarmonicsIntMinusOne = loHarmonicsInt - 1;
+          int32_t loHarmonicsInt = ceil(loHarmonics);
+          int32_t loHarmonicsIntMinusOne = loHarmonicsInt - 1;
           float loHarmonicsFrac = loHarmonicsInt - loHarmonics;
           
           float hiHarmonics = ZXP(hiHarmonicsin);
-          int32 hiHarmonicsInt = floor(hiHarmonics);
+          int32_t hiHarmonicsInt = floor(hiHarmonics);
           float hiHarmonicsFrac = hiHarmonics - hiHarmonicsInt;
           
-          int32 hiHarmonicsIntPlusOne = hiHarmonicsInt + 1;
-          int32 loEvenHarmonics = loHarmonicsInt%2 == 0? loHarmonicsInt : loHarmonicsInt + 1; // The lowest even harmonic index
-          int32 hiEvenHarmonics = hiHarmonicsInt%2 == 0? hiHarmonicsInt : hiHarmonicsInt - 1; // The highest even harmonic index
-          int32 hiEvenHarmonicsPlusTwo = hiEvenHarmonics + 2;
-          int32 numEvenHarmonics = (hiEvenHarmonics - loEvenHarmonics) / 2 + 1; //The total number of even harmonics
+          int32_t hiHarmonicsIntPlusOne = hiHarmonicsInt + 1;
+          int32_t loEvenHarmonics = loHarmonicsInt%2 == 0? loHarmonicsInt : loHarmonicsInt + 1; // The lowest even harmonic index
+          int32_t hiEvenHarmonics = hiHarmonicsInt%2 == 0? hiHarmonicsInt : hiHarmonicsInt - 1; // The highest even harmonic index
+          int32_t hiEvenHarmonicsPlusTwo = hiEvenHarmonics + 2;
+          int32_t numEvenHarmonics = (hiEvenHarmonics - loEvenHarmonics) / 2 + 1; //The total number of even harmonics
           
           float slope = slopein;
           float evenOddRatio = evenOddRatioin;
@@ -1205,19 +1206,19 @@ void BLOsc2_next_kaakk(BLOsc2 *unit, int inNumSamples)
           float ampFactor = 0.99<slope&&slope<1.01? (hiHarmonicsInt - loHarmonicsInt + 1) - evenOddFactor * numEvenHarmonics + fundamentalAdjust + extraHarmonicsAdjust:((pow(slope,loHarmonicsInt) - pow(slope,hiHarmonicsIntPlusOne)) / (1 - slope)) - (evenOddFactor * (pow(slope, loEvenHarmonics) - pow(slope, hiEvenHarmonicsPlusTwo)) / (1 - pow(slope, 2))) + fundamentalAdjust * pow(slope,loHarmonicsIntMinusOne) + extraHarmonicsAdjust * pow(slope, hiHarmonicsIntPlusOne);
           //ampFactor will be used to normalize the output amplitude. To avoid the denominator of this calculation to be 0 when slope = 1, the different formula is used when slope falls between 0.99 and 1.01.
           
-          int32 sinPhaseBase = phase;
-          int32 cosPhaseBase = phase + (int32)(radtoinc * pi2);
-          int32 sinPhaseLo = phase * loHarmonicsInt;
-          int32 sinPhaseLoMinusOne = phase * loHarmonicsIntMinusOne;
-          int32 cosPhaseLo = phase * loHarmonicsInt + (int32)(radtoinc * pi2);
-          int32 sinPhaseHiPlusOne = phase * hiHarmonicsIntPlusOne;
-          int32 cosPhaseHiPlusOne = phase * hiHarmonicsIntPlusOne + (int32)(radtoinc * pi2);
-          int32 sinPhase2 = phase * 2;
-          int32 cosPhase2 = phase * 2 + (int32)(radtoinc * pi2);
-          int32 sinPhaseLoEven = phase * loEvenHarmonics;
-          int32 cosPhaseLoEven = phase * loEvenHarmonics + (int32)(radtoinc * pi2);
-          int32 sinPhaseHiEvenPlusTwo = phase * hiEvenHarmonicsPlusTwo;
-          int32 cosPhaseHiEvenPlusTWo = phase * hiEvenHarmonicsPlusTwo + (int32)(radtoinc * pi2);
+          int32_t sinPhaseBase = phase;
+          int32_t cosPhaseBase = phase + (int32_t)(radtoinc * pi2);
+          int32_t sinPhaseLo = phase * loHarmonicsInt;
+          int32_t sinPhaseLoMinusOne = phase * loHarmonicsIntMinusOne;
+          int32_t cosPhaseLo = phase * loHarmonicsInt + (int32_t)(radtoinc * pi2);
+          int32_t sinPhaseHiPlusOne = phase * hiHarmonicsIntPlusOne;
+          int32_t cosPhaseHiPlusOne = phase * hiHarmonicsIntPlusOne + (int32_t)(radtoinc * pi2);
+          int32_t sinPhase2 = phase * 2;
+          int32_t cosPhase2 = phase * 2 + (int32_t)(radtoinc * pi2);
+          int32_t sinPhaseLoEven = phase * loEvenHarmonics;
+          int32_t cosPhaseLoEven = phase * loEvenHarmonics + (int32_t)(radtoinc * pi2);
+          int32_t sinPhaseHiEvenPlusTwo = phase * hiEvenHarmonicsPlusTwo;
+          int32_t cosPhaseHiEvenPlusTWo = phase * hiEvenHarmonicsPlusTwo + (int32_t)(radtoinc * pi2);
           
           float a = pow(slope,loHarmonicsInt) * lookupi1(table0, table1, cosPhaseLo, lomask) - pow(slope,hiHarmonicsIntPlusOne) * lookupi1(table0, table1, cosPhaseHiPlusOne, lomask);
           float b = pow(slope,loHarmonicsInt) * lookupi1(table0, table1, sinPhaseLo, lomask) - pow(slope,hiHarmonicsIntPlusOne) * lookupi1(table0, table1, sinPhaseHiPlusOne, lomask);
@@ -1251,28 +1252,28 @@ void BLOsc2_next_kaaka(BLOsc2 *unit, int inNumSamples)
     float *table0 = ft->mSineWavetable;
     float *table1 = table0 + 1;
     
-    int32 phase = unit->m_phase;
-    int32 lomask = unit->m_lomask;
+    int32_t phase = unit->m_phase;
+    int32_t lomask = unit->m_lomask;
     
-    int32 phaseinc = (int32)(unit->m_cpstoinc * freqin);
+    int32_t phaseinc = (int32_t)(unit->m_cpstoinc * freqin);
     float radtoinc = unit->m_radtoinc;
     
     
     LOOP1(inNumSamples,
           float loHarmonics = ZXP(loHarmonicsin);
-          int32 loHarmonicsInt = ceil(loHarmonics);
-          int32 loHarmonicsIntMinusOne = loHarmonicsInt - 1;
+          int32_t loHarmonicsInt = ceil(loHarmonics);
+          int32_t loHarmonicsIntMinusOne = loHarmonicsInt - 1;
           float loHarmonicsFrac = loHarmonicsInt - loHarmonics;
           
           float hiHarmonics = ZXP(hiHarmonicsin);
-          int32 hiHarmonicsInt = floor(hiHarmonics);
+          int32_t hiHarmonicsInt = floor(hiHarmonics);
           float hiHarmonicsFrac = hiHarmonics - hiHarmonicsInt;
           
-          int32 hiHarmonicsIntPlusOne = hiHarmonicsInt + 1;
-          int32 loEvenHarmonics = loHarmonicsInt%2 == 0? loHarmonicsInt : loHarmonicsInt + 1; // The lowest even harmonic index
-          int32 hiEvenHarmonics = hiHarmonicsInt%2 == 0? hiHarmonicsInt : hiHarmonicsInt - 1; // The highest even harmonic index
-          int32 hiEvenHarmonicsPlusTwo = hiEvenHarmonics + 2;
-          int32 numEvenHarmonics = (hiEvenHarmonics - loEvenHarmonics) / 2 + 1; //The total number of even harmonics
+          int32_t hiHarmonicsIntPlusOne = hiHarmonicsInt + 1;
+          int32_t loEvenHarmonics = loHarmonicsInt%2 == 0? loHarmonicsInt : loHarmonicsInt + 1; // The lowest even harmonic index
+          int32_t hiEvenHarmonics = hiHarmonicsInt%2 == 0? hiHarmonicsInt : hiHarmonicsInt - 1; // The highest even harmonic index
+          int32_t hiEvenHarmonicsPlusTwo = hiEvenHarmonics + 2;
+          int32_t numEvenHarmonics = (hiEvenHarmonics - loEvenHarmonics) / 2 + 1; //The total number of even harmonics
           
           float slope = slopein;
           float evenOddRatio = ZXP(evenOddRatioin);
@@ -1284,19 +1285,19 @@ void BLOsc2_next_kaaka(BLOsc2 *unit, int inNumSamples)
           float ampFactor = 0.99<slope&&slope<1.01? (hiHarmonicsInt - loHarmonicsInt + 1) - evenOddFactor * numEvenHarmonics + fundamentalAdjust + extraHarmonicsAdjust:((pow(slope,loHarmonicsInt) - pow(slope,hiHarmonicsIntPlusOne)) / (1 - slope)) - (evenOddFactor * (pow(slope, loEvenHarmonics) - pow(slope, hiEvenHarmonicsPlusTwo)) / (1 - pow(slope, 2))) + fundamentalAdjust * pow(slope,loHarmonicsIntMinusOne) + extraHarmonicsAdjust * pow(slope, hiHarmonicsIntPlusOne);
           //ampFactor will be used to normalize the output amplitude. To avoid the denominator of this calculation to be 0 when slope = 1, the different formula is used when slope falls between 0.99 and 1.01.
           
-          int32 sinPhaseBase = phase;
-          int32 cosPhaseBase = phase + (int32)(radtoinc * pi2);
-          int32 sinPhaseLo = phase * loHarmonicsInt;
-          int32 sinPhaseLoMinusOne = phase * loHarmonicsIntMinusOne;
-          int32 cosPhaseLo = phase * loHarmonicsInt + (int32)(radtoinc * pi2);
-          int32 sinPhaseHiPlusOne = phase * hiHarmonicsIntPlusOne;
-          int32 cosPhaseHiPlusOne = phase * hiHarmonicsIntPlusOne + (int32)(radtoinc * pi2);
-          int32 sinPhase2 = phase * 2;
-          int32 cosPhase2 = phase * 2 + (int32)(radtoinc * pi2);
-          int32 sinPhaseLoEven = phase * loEvenHarmonics;
-          int32 cosPhaseLoEven = phase * loEvenHarmonics + (int32)(radtoinc * pi2);
-          int32 sinPhaseHiEvenPlusTwo = phase * hiEvenHarmonicsPlusTwo;
-          int32 cosPhaseHiEvenPlusTWo = phase * hiEvenHarmonicsPlusTwo + (int32)(radtoinc * pi2);
+          int32_t sinPhaseBase = phase;
+          int32_t cosPhaseBase = phase + (int32_t)(radtoinc * pi2);
+          int32_t sinPhaseLo = phase * loHarmonicsInt;
+          int32_t sinPhaseLoMinusOne = phase * loHarmonicsIntMinusOne;
+          int32_t cosPhaseLo = phase * loHarmonicsInt + (int32_t)(radtoinc * pi2);
+          int32_t sinPhaseHiPlusOne = phase * hiHarmonicsIntPlusOne;
+          int32_t cosPhaseHiPlusOne = phase * hiHarmonicsIntPlusOne + (int32_t)(radtoinc * pi2);
+          int32_t sinPhase2 = phase * 2;
+          int32_t cosPhase2 = phase * 2 + (int32_t)(radtoinc * pi2);
+          int32_t sinPhaseLoEven = phase * loEvenHarmonics;
+          int32_t cosPhaseLoEven = phase * loEvenHarmonics + (int32_t)(radtoinc * pi2);
+          int32_t sinPhaseHiEvenPlusTwo = phase * hiEvenHarmonicsPlusTwo;
+          int32_t cosPhaseHiEvenPlusTWo = phase * hiEvenHarmonicsPlusTwo + (int32_t)(radtoinc * pi2);
           
           float a = pow(slope,loHarmonicsInt) * lookupi1(table0, table1, cosPhaseLo, lomask) - pow(slope,hiHarmonicsIntPlusOne) * lookupi1(table0, table1, cosPhaseHiPlusOne, lomask);
           float b = pow(slope,loHarmonicsInt) * lookupi1(table0, table1, sinPhaseLo, lomask) - pow(slope,hiHarmonicsIntPlusOne) * lookupi1(table0, table1, sinPhaseHiPlusOne, lomask);
@@ -1330,28 +1331,28 @@ void BLOsc2_next_kaaak(BLOsc2 *unit, int inNumSamples)
     float *table0 = ft->mSineWavetable;
     float *table1 = table0 + 1;
     
-    int32 phase = unit->m_phase;
-    int32 lomask = unit->m_lomask;
+    int32_t phase = unit->m_phase;
+    int32_t lomask = unit->m_lomask;
     
-    int32 phaseinc = (int32)(unit->m_cpstoinc * freqin);
+    int32_t phaseinc = (int32_t)(unit->m_cpstoinc * freqin);
     float radtoinc = unit->m_radtoinc;
     
     
     LOOP1(inNumSamples,
           float loHarmonics = ZXP(loHarmonicsin);
-          int32 loHarmonicsInt = ceil(loHarmonics);
-          int32 loHarmonicsIntMinusOne = loHarmonicsInt - 1;
+          int32_t loHarmonicsInt = ceil(loHarmonics);
+          int32_t loHarmonicsIntMinusOne = loHarmonicsInt - 1;
           float loHarmonicsFrac = loHarmonicsInt - loHarmonics;
           
           float hiHarmonics = ZXP(hiHarmonicsin);
-          int32 hiHarmonicsInt = floor(hiHarmonics);
+          int32_t hiHarmonicsInt = floor(hiHarmonics);
           float hiHarmonicsFrac = hiHarmonics - hiHarmonicsInt;
           
-          int32 hiHarmonicsIntPlusOne = hiHarmonicsInt + 1;
-          int32 loEvenHarmonics = loHarmonicsInt%2 == 0? loHarmonicsInt : loHarmonicsInt + 1; // The lowest even harmonic index
-          int32 hiEvenHarmonics = hiHarmonicsInt%2 == 0? hiHarmonicsInt : hiHarmonicsInt - 1; // The highest even harmonic index
-          int32 hiEvenHarmonicsPlusTwo = hiEvenHarmonics + 2;
-          int32 numEvenHarmonics = (hiEvenHarmonics - loEvenHarmonics) / 2 + 1; //The total number of even harmonics
+          int32_t hiHarmonicsIntPlusOne = hiHarmonicsInt + 1;
+          int32_t loEvenHarmonics = loHarmonicsInt%2 == 0? loHarmonicsInt : loHarmonicsInt + 1; // The lowest even harmonic index
+          int32_t hiEvenHarmonics = hiHarmonicsInt%2 == 0? hiHarmonicsInt : hiHarmonicsInt - 1; // The highest even harmonic index
+          int32_t hiEvenHarmonicsPlusTwo = hiEvenHarmonics + 2;
+          int32_t numEvenHarmonics = (hiEvenHarmonics - loEvenHarmonics) / 2 + 1; //The total number of even harmonics
           
           float slope = ZXP(slopein);
           float evenOddRatio = evenOddRatioin;
@@ -1363,19 +1364,19 @@ void BLOsc2_next_kaaak(BLOsc2 *unit, int inNumSamples)
           float ampFactor = 0.99<slope&&slope<1.01? (hiHarmonicsInt - loHarmonicsInt + 1) - evenOddFactor * numEvenHarmonics + fundamentalAdjust + extraHarmonicsAdjust:((pow(slope,loHarmonicsInt) - pow(slope,hiHarmonicsIntPlusOne)) / (1 - slope)) - (evenOddFactor * (pow(slope, loEvenHarmonics) - pow(slope, hiEvenHarmonicsPlusTwo)) / (1 - pow(slope, 2))) + fundamentalAdjust * pow(slope,loHarmonicsIntMinusOne) + extraHarmonicsAdjust * pow(slope, hiHarmonicsIntPlusOne);
           //ampFactor will be used to normalize the output amplitude. To avoid the denominator of this calculation to be 0 when slope = 1, the different formula is used when slope falls between 0.99 and 1.01.
           
-          int32 sinPhaseBase = phase;
-          int32 cosPhaseBase = phase + (int32)(radtoinc * pi2);
-          int32 sinPhaseLo = phase * loHarmonicsInt;
-          int32 sinPhaseLoMinusOne = phase * loHarmonicsIntMinusOne;
-          int32 cosPhaseLo = phase * loHarmonicsInt + (int32)(radtoinc * pi2);
-          int32 sinPhaseHiPlusOne = phase * hiHarmonicsIntPlusOne;
-          int32 cosPhaseHiPlusOne = phase * hiHarmonicsIntPlusOne + (int32)(radtoinc * pi2);
-          int32 sinPhase2 = phase * 2;
-          int32 cosPhase2 = phase * 2 + (int32)(radtoinc * pi2);
-          int32 sinPhaseLoEven = phase * loEvenHarmonics;
-          int32 cosPhaseLoEven = phase * loEvenHarmonics + (int32)(radtoinc * pi2);
-          int32 sinPhaseHiEvenPlusTwo = phase * hiEvenHarmonicsPlusTwo;
-          int32 cosPhaseHiEvenPlusTWo = phase * hiEvenHarmonicsPlusTwo + (int32)(radtoinc * pi2);
+          int32_t sinPhaseBase = phase;
+          int32_t cosPhaseBase = phase + (int32_t)(radtoinc * pi2);
+          int32_t sinPhaseLo = phase * loHarmonicsInt;
+          int32_t sinPhaseLoMinusOne = phase * loHarmonicsIntMinusOne;
+          int32_t cosPhaseLo = phase * loHarmonicsInt + (int32_t)(radtoinc * pi2);
+          int32_t sinPhaseHiPlusOne = phase * hiHarmonicsIntPlusOne;
+          int32_t cosPhaseHiPlusOne = phase * hiHarmonicsIntPlusOne + (int32_t)(radtoinc * pi2);
+          int32_t sinPhase2 = phase * 2;
+          int32_t cosPhase2 = phase * 2 + (int32_t)(radtoinc * pi2);
+          int32_t sinPhaseLoEven = phase * loEvenHarmonics;
+          int32_t cosPhaseLoEven = phase * loEvenHarmonics + (int32_t)(radtoinc * pi2);
+          int32_t sinPhaseHiEvenPlusTwo = phase * hiEvenHarmonicsPlusTwo;
+          int32_t cosPhaseHiEvenPlusTWo = phase * hiEvenHarmonicsPlusTwo + (int32_t)(radtoinc * pi2);
           
           float a = pow(slope,loHarmonicsInt) * lookupi1(table0, table1, cosPhaseLo, lomask) - pow(slope,hiHarmonicsIntPlusOne) * lookupi1(table0, table1, cosPhaseHiPlusOne, lomask);
           float b = pow(slope,loHarmonicsInt) * lookupi1(table0, table1, sinPhaseLo, lomask) - pow(slope,hiHarmonicsIntPlusOne) * lookupi1(table0, table1, sinPhaseHiPlusOne, lomask);
@@ -1409,28 +1410,28 @@ void BLOsc2_next_kaaaa(BLOsc2 *unit, int inNumSamples)
     float *table0 = ft->mSineWavetable;
     float *table1 = table0 + 1;
     
-    int32 phase = unit->m_phase;
-    int32 lomask = unit->m_lomask;
+    int32_t phase = unit->m_phase;
+    int32_t lomask = unit->m_lomask;
     
-    int32 phaseinc = (int32)(unit->m_cpstoinc * freqin);
+    int32_t phaseinc = (int32_t)(unit->m_cpstoinc * freqin);
     float radtoinc = unit->m_radtoinc;
     
     
     LOOP1(inNumSamples,
           float loHarmonics = ZXP(loHarmonicsin);
-          int32 loHarmonicsInt = ceil(loHarmonics);
-          int32 loHarmonicsIntMinusOne = loHarmonicsInt - 1;
+          int32_t loHarmonicsInt = ceil(loHarmonics);
+          int32_t loHarmonicsIntMinusOne = loHarmonicsInt - 1;
           float loHarmonicsFrac = loHarmonicsInt - loHarmonics;
           
           float hiHarmonics = ZXP(hiHarmonicsin);
-          int32 hiHarmonicsInt = floor(hiHarmonics);
+          int32_t hiHarmonicsInt = floor(hiHarmonics);
           float hiHarmonicsFrac = hiHarmonics - hiHarmonicsInt;
           
-          int32 hiHarmonicsIntPlusOne = hiHarmonicsInt + 1;
-          int32 loEvenHarmonics = loHarmonicsInt%2 == 0? loHarmonicsInt : loHarmonicsInt + 1; // The lowest even harmonic index
-          int32 hiEvenHarmonics = hiHarmonicsInt%2 == 0? hiHarmonicsInt : hiHarmonicsInt - 1; // The highest even harmonic index
-          int32 hiEvenHarmonicsPlusTwo = hiEvenHarmonics + 2;
-          int32 numEvenHarmonics = (hiEvenHarmonics - loEvenHarmonics) / 2 + 1; //The total number of even harmonics
+          int32_t hiHarmonicsIntPlusOne = hiHarmonicsInt + 1;
+          int32_t loEvenHarmonics = loHarmonicsInt%2 == 0? loHarmonicsInt : loHarmonicsInt + 1; // The lowest even harmonic index
+          int32_t hiEvenHarmonics = hiHarmonicsInt%2 == 0? hiHarmonicsInt : hiHarmonicsInt - 1; // The highest even harmonic index
+          int32_t hiEvenHarmonicsPlusTwo = hiEvenHarmonics + 2;
+          int32_t numEvenHarmonics = (hiEvenHarmonics - loEvenHarmonics) / 2 + 1; //The total number of even harmonics
           
           float slope = ZXP(slopein);
           float evenOddRatio = ZXP(evenOddRatioin);
@@ -1442,19 +1443,19 @@ void BLOsc2_next_kaaaa(BLOsc2 *unit, int inNumSamples)
           float ampFactor = 0.99<slope&&slope<1.01? (hiHarmonicsInt - loHarmonicsInt + 1) - evenOddFactor * numEvenHarmonics + fundamentalAdjust + extraHarmonicsAdjust:((pow(slope,loHarmonicsInt) - pow(slope,hiHarmonicsIntPlusOne)) / (1 - slope)) - (evenOddFactor * (pow(slope, loEvenHarmonics) - pow(slope, hiEvenHarmonicsPlusTwo)) / (1 - pow(slope, 2))) + fundamentalAdjust * pow(slope,loHarmonicsIntMinusOne) + extraHarmonicsAdjust * pow(slope, hiHarmonicsIntPlusOne);
           //ampFactor will be used to normalize the output amplitude. To avoid the denominator of this calculation to be 0 when slope = 1, the different formula is used when slope falls between 0.99 and 1.01.
           
-          int32 sinPhaseBase = phase;
-          int32 cosPhaseBase = phase + (int32)(radtoinc * pi2);
-          int32 sinPhaseLo = phase * loHarmonicsInt;
-          int32 sinPhaseLoMinusOne = phase * loHarmonicsIntMinusOne;
-          int32 cosPhaseLo = phase * loHarmonicsInt + (int32)(radtoinc * pi2);
-          int32 sinPhaseHiPlusOne = phase * hiHarmonicsIntPlusOne;
-          int32 cosPhaseHiPlusOne = phase * hiHarmonicsIntPlusOne + (int32)(radtoinc * pi2);
-          int32 sinPhase2 = phase * 2;
-          int32 cosPhase2 = phase * 2 + (int32)(radtoinc * pi2);
-          int32 sinPhaseLoEven = phase * loEvenHarmonics;
-          int32 cosPhaseLoEven = phase * loEvenHarmonics + (int32)(radtoinc * pi2);
-          int32 sinPhaseHiEvenPlusTwo = phase * hiEvenHarmonicsPlusTwo;
-          int32 cosPhaseHiEvenPlusTWo = phase * hiEvenHarmonicsPlusTwo + (int32)(radtoinc * pi2);
+          int32_t sinPhaseBase = phase;
+          int32_t cosPhaseBase = phase + (int32_t)(radtoinc * pi2);
+          int32_t sinPhaseLo = phase * loHarmonicsInt;
+          int32_t sinPhaseLoMinusOne = phase * loHarmonicsIntMinusOne;
+          int32_t cosPhaseLo = phase * loHarmonicsInt + (int32_t)(radtoinc * pi2);
+          int32_t sinPhaseHiPlusOne = phase * hiHarmonicsIntPlusOne;
+          int32_t cosPhaseHiPlusOne = phase * hiHarmonicsIntPlusOne + (int32_t)(radtoinc * pi2);
+          int32_t sinPhase2 = phase * 2;
+          int32_t cosPhase2 = phase * 2 + (int32_t)(radtoinc * pi2);
+          int32_t sinPhaseLoEven = phase * loEvenHarmonics;
+          int32_t cosPhaseLoEven = phase * loEvenHarmonics + (int32_t)(radtoinc * pi2);
+          int32_t sinPhaseHiEvenPlusTwo = phase * hiEvenHarmonicsPlusTwo;
+          int32_t cosPhaseHiEvenPlusTWo = phase * hiEvenHarmonicsPlusTwo + (int32_t)(radtoinc * pi2);
           
           float a = pow(slope,loHarmonicsInt) * lookupi1(table0, table1, cosPhaseLo, lomask) - pow(slope,hiHarmonicsIntPlusOne) * lookupi1(table0, table1, cosPhaseHiPlusOne, lomask);
           float b = pow(slope,loHarmonicsInt) * lookupi1(table0, table1, sinPhaseLo, lomask) - pow(slope,hiHarmonicsIntPlusOne) * lookupi1(table0, table1, sinPhaseHiPlusOne, lomask);
@@ -1488,8 +1489,8 @@ void BLOsc2_next_akkkk(BLOsc2 *unit, int inNumSamples)
     float *table0 = ft->mSineWavetable;
     float *table1 = table0 + 1;
     
-    int32 phase = unit->m_phase;
-    int32 lomask = unit->m_lomask;
+    int32_t phase = unit->m_phase;
+    int32_t lomask = unit->m_lomask;
     
     float cpstoinc = unit->m_cpstoinc;
     float radtoinc = unit->m_radtoinc;
@@ -1497,19 +1498,19 @@ void BLOsc2_next_akkkk(BLOsc2 *unit, int inNumSamples)
     
     LOOP1(inNumSamples,
           float loHarmonics = loHarmonicsin;
-          int32 loHarmonicsInt = ceil(loHarmonics);
-          int32 loHarmonicsIntMinusOne = loHarmonicsInt - 1;
+          int32_t loHarmonicsInt = ceil(loHarmonics);
+          int32_t loHarmonicsIntMinusOne = loHarmonicsInt - 1;
           float loHarmonicsFrac = loHarmonicsInt - loHarmonics;
           
           float hiHarmonics = hiHarmonicsin;
-          int32 hiHarmonicsInt = floor(hiHarmonics);
+          int32_t hiHarmonicsInt = floor(hiHarmonics);
           float hiHarmonicsFrac = hiHarmonics - hiHarmonicsInt;
           
-          int32 hiHarmonicsIntPlusOne = hiHarmonicsInt + 1;
-          int32 loEvenHarmonics = loHarmonicsInt%2 == 0? loHarmonicsInt : loHarmonicsInt + 1; // The lowest even harmonic index
-          int32 hiEvenHarmonics = hiHarmonicsInt%2 == 0? hiHarmonicsInt : hiHarmonicsInt - 1; // The highest even harmonic index
-          int32 hiEvenHarmonicsPlusTwo = hiEvenHarmonics + 2;
-          int32 numEvenHarmonics = (hiEvenHarmonics - loEvenHarmonics) / 2 + 1; //The total number of even harmonics
+          int32_t hiHarmonicsIntPlusOne = hiHarmonicsInt + 1;
+          int32_t loEvenHarmonics = loHarmonicsInt%2 == 0? loHarmonicsInt : loHarmonicsInt + 1; // The lowest even harmonic index
+          int32_t hiEvenHarmonics = hiHarmonicsInt%2 == 0? hiHarmonicsInt : hiHarmonicsInt - 1; // The highest even harmonic index
+          int32_t hiEvenHarmonicsPlusTwo = hiEvenHarmonics + 2;
+          int32_t numEvenHarmonics = (hiEvenHarmonics - loEvenHarmonics) / 2 + 1; //The total number of even harmonics
           
           float slope = slopein;
           float evenOddRatio = evenOddRatioin;
@@ -1521,19 +1522,19 @@ void BLOsc2_next_akkkk(BLOsc2 *unit, int inNumSamples)
           float ampFactor = 0.99<slope&&slope<1.01? (hiHarmonicsInt - loHarmonicsInt + 1) - evenOddFactor * numEvenHarmonics + fundamentalAdjust + extraHarmonicsAdjust:((pow(slope,loHarmonicsInt) - pow(slope,hiHarmonicsIntPlusOne)) / (1 - slope)) - (evenOddFactor * (pow(slope, loEvenHarmonics) - pow(slope, hiEvenHarmonicsPlusTwo)) / (1 - pow(slope, 2))) + fundamentalAdjust * pow(slope,loHarmonicsIntMinusOne) + extraHarmonicsAdjust * pow(slope, hiHarmonicsIntPlusOne);
           //ampFactor will be used to normalize the output amplitude. To avoid the denominator of this calculation to be 0 when slope = 1, the different formula is used when slope falls between 0.99 and 1.01.
           
-          int32 sinPhaseBase = phase;
-          int32 cosPhaseBase = phase + (int32)(radtoinc * pi2);
-          int32 sinPhaseLo = phase * loHarmonicsInt;
-          int32 sinPhaseLoMinusOne = phase * loHarmonicsIntMinusOne;
-          int32 cosPhaseLo = phase * loHarmonicsInt + (int32)(radtoinc * pi2);
-          int32 sinPhaseHiPlusOne = phase * hiHarmonicsIntPlusOne;
-          int32 cosPhaseHiPlusOne = phase * hiHarmonicsIntPlusOne + (int32)(radtoinc * pi2);
-          int32 sinPhase2 = phase * 2;
-          int32 cosPhase2 = phase * 2 + (int32)(radtoinc * pi2);
-          int32 sinPhaseLoEven = phase * loEvenHarmonics;
-          int32 cosPhaseLoEven = phase * loEvenHarmonics + (int32)(radtoinc * pi2);
-          int32 sinPhaseHiEvenPlusTwo = phase * hiEvenHarmonicsPlusTwo;
-          int32 cosPhaseHiEvenPlusTWo = phase * hiEvenHarmonicsPlusTwo + (int32)(radtoinc * pi2);
+          int32_t sinPhaseBase = phase;
+          int32_t cosPhaseBase = phase + (int32_t)(radtoinc * pi2);
+          int32_t sinPhaseLo = phase * loHarmonicsInt;
+          int32_t sinPhaseLoMinusOne = phase * loHarmonicsIntMinusOne;
+          int32_t cosPhaseLo = phase * loHarmonicsInt + (int32_t)(radtoinc * pi2);
+          int32_t sinPhaseHiPlusOne = phase * hiHarmonicsIntPlusOne;
+          int32_t cosPhaseHiPlusOne = phase * hiHarmonicsIntPlusOne + (int32_t)(radtoinc * pi2);
+          int32_t sinPhase2 = phase * 2;
+          int32_t cosPhase2 = phase * 2 + (int32_t)(radtoinc * pi2);
+          int32_t sinPhaseLoEven = phase * loEvenHarmonics;
+          int32_t cosPhaseLoEven = phase * loEvenHarmonics + (int32_t)(radtoinc * pi2);
+          int32_t sinPhaseHiEvenPlusTwo = phase * hiEvenHarmonicsPlusTwo;
+          int32_t cosPhaseHiEvenPlusTWo = phase * hiEvenHarmonicsPlusTwo + (int32_t)(radtoinc * pi2);
           
           float a = pow(slope,loHarmonicsInt) * lookupi1(table0, table1, cosPhaseLo, lomask) - pow(slope,hiHarmonicsIntPlusOne) * lookupi1(table0, table1, cosPhaseHiPlusOne, lomask);
           float b = pow(slope,loHarmonicsInt) * lookupi1(table0, table1, sinPhaseLo, lomask) - pow(slope,hiHarmonicsIntPlusOne) * lookupi1(table0, table1, sinPhaseHiPlusOne, lomask);
@@ -1548,7 +1549,7 @@ void BLOsc2_next_akkkk(BLOsc2 *unit, int inNumSamples)
           float fractionalExtraHarmonics = extraHarmonicsAdjust * pow(slope,hiHarmonicsIntPlusOne) * lookupi1(table0, table1, sinPhaseHiPlusOne, lomask);
           
           float z = ((((b*c) - (a*d))  / ((c*c) + (d*d))) - (((f*g) - (e*h))  / ((g*g) + (h*h))) + fractionalFundamental + fractionalExtraHarmonics) / ampFactor;
-          phase += (int32)(cpstoinc * ZXP(freqin));
+          phase += (int32_t)(cpstoinc * ZXP(freqin));
           ZXP(out) = z;
           );
     unit->m_phase = phase;
@@ -1567,8 +1568,8 @@ void BLOsc2_next_akkka(BLOsc2 *unit, int inNumSamples)
     float *table0 = ft->mSineWavetable;
     float *table1 = table0 + 1;
     
-    int32 phase = unit->m_phase;
-    int32 lomask = unit->m_lomask;
+    int32_t phase = unit->m_phase;
+    int32_t lomask = unit->m_lomask;
     
     float cpstoinc = unit->m_cpstoinc;
     float radtoinc = unit->m_radtoinc;
@@ -1576,19 +1577,19 @@ void BLOsc2_next_akkka(BLOsc2 *unit, int inNumSamples)
     
     LOOP1(inNumSamples,
           float loHarmonics = loHarmonicsin;
-          int32 loHarmonicsInt = ceil(loHarmonics);
-          int32 loHarmonicsIntMinusOne = loHarmonicsInt - 1;
+          int32_t loHarmonicsInt = ceil(loHarmonics);
+          int32_t loHarmonicsIntMinusOne = loHarmonicsInt - 1;
           float loHarmonicsFrac = loHarmonicsInt - loHarmonics;
           
           float hiHarmonics = hiHarmonicsin;
-          int32 hiHarmonicsInt = floor(hiHarmonics);
+          int32_t hiHarmonicsInt = floor(hiHarmonics);
           float hiHarmonicsFrac = hiHarmonics - hiHarmonicsInt;
           
-          int32 hiHarmonicsIntPlusOne = hiHarmonicsInt + 1;
-          int32 loEvenHarmonics = loHarmonicsInt%2 == 0? loHarmonicsInt : loHarmonicsInt + 1; // The lowest even harmonic index
-          int32 hiEvenHarmonics = hiHarmonicsInt%2 == 0? hiHarmonicsInt : hiHarmonicsInt - 1; // The highest even harmonic index
-          int32 hiEvenHarmonicsPlusTwo = hiEvenHarmonics + 2;
-          int32 numEvenHarmonics = (hiEvenHarmonics - loEvenHarmonics) / 2 + 1; //The total number of even harmonics
+          int32_t hiHarmonicsIntPlusOne = hiHarmonicsInt + 1;
+          int32_t loEvenHarmonics = loHarmonicsInt%2 == 0? loHarmonicsInt : loHarmonicsInt + 1; // The lowest even harmonic index
+          int32_t hiEvenHarmonics = hiHarmonicsInt%2 == 0? hiHarmonicsInt : hiHarmonicsInt - 1; // The highest even harmonic index
+          int32_t hiEvenHarmonicsPlusTwo = hiEvenHarmonics + 2;
+          int32_t numEvenHarmonics = (hiEvenHarmonics - loEvenHarmonics) / 2 + 1; //The total number of even harmonics
           
           float slope = slopein;
           float evenOddRatio = ZXP(evenOddRatioin);
@@ -1600,19 +1601,19 @@ void BLOsc2_next_akkka(BLOsc2 *unit, int inNumSamples)
           float ampFactor = 0.99<slope&&slope<1.01? (hiHarmonicsInt - loHarmonicsInt + 1) - evenOddFactor * numEvenHarmonics + fundamentalAdjust + extraHarmonicsAdjust:((pow(slope,loHarmonicsInt) - pow(slope,hiHarmonicsIntPlusOne)) / (1 - slope)) - (evenOddFactor * (pow(slope, loEvenHarmonics) - pow(slope, hiEvenHarmonicsPlusTwo)) / (1 - pow(slope, 2))) + fundamentalAdjust * pow(slope,loHarmonicsIntMinusOne) + extraHarmonicsAdjust * pow(slope, hiHarmonicsIntPlusOne);
           //ampFactor will be used to normalize the output amplitude. To avoid the denominator of this calculation to be 0 when slope = 1, the different formula is used when slope falls between 0.99 and 1.01.
           
-          int32 sinPhaseBase = phase;
-          int32 cosPhaseBase = phase + (int32)(radtoinc * pi2);
-          int32 sinPhaseLo = phase * loHarmonicsInt;
-          int32 sinPhaseLoMinusOne = phase * loHarmonicsIntMinusOne;
-          int32 cosPhaseLo = phase * loHarmonicsInt + (int32)(radtoinc * pi2);
-          int32 sinPhaseHiPlusOne = phase * hiHarmonicsIntPlusOne;
-          int32 cosPhaseHiPlusOne = phase * hiHarmonicsIntPlusOne + (int32)(radtoinc * pi2);
-          int32 sinPhase2 = phase * 2;
-          int32 cosPhase2 = phase * 2 + (int32)(radtoinc * pi2);
-          int32 sinPhaseLoEven = phase * loEvenHarmonics;
-          int32 cosPhaseLoEven = phase * loEvenHarmonics + (int32)(radtoinc * pi2);
-          int32 sinPhaseHiEvenPlusTwo = phase * hiEvenHarmonicsPlusTwo;
-          int32 cosPhaseHiEvenPlusTWo = phase * hiEvenHarmonicsPlusTwo + (int32)(radtoinc * pi2);
+          int32_t sinPhaseBase = phase;
+          int32_t cosPhaseBase = phase + (int32_t)(radtoinc * pi2);
+          int32_t sinPhaseLo = phase * loHarmonicsInt;
+          int32_t sinPhaseLoMinusOne = phase * loHarmonicsIntMinusOne;
+          int32_t cosPhaseLo = phase * loHarmonicsInt + (int32_t)(radtoinc * pi2);
+          int32_t sinPhaseHiPlusOne = phase * hiHarmonicsIntPlusOne;
+          int32_t cosPhaseHiPlusOne = phase * hiHarmonicsIntPlusOne + (int32_t)(radtoinc * pi2);
+          int32_t sinPhase2 = phase * 2;
+          int32_t cosPhase2 = phase * 2 + (int32_t)(radtoinc * pi2);
+          int32_t sinPhaseLoEven = phase * loEvenHarmonics;
+          int32_t cosPhaseLoEven = phase * loEvenHarmonics + (int32_t)(radtoinc * pi2);
+          int32_t sinPhaseHiEvenPlusTwo = phase * hiEvenHarmonicsPlusTwo;
+          int32_t cosPhaseHiEvenPlusTWo = phase * hiEvenHarmonicsPlusTwo + (int32_t)(radtoinc * pi2);
           
           float a = pow(slope,loHarmonicsInt) * lookupi1(table0, table1, cosPhaseLo, lomask) - pow(slope,hiHarmonicsIntPlusOne) * lookupi1(table0, table1, cosPhaseHiPlusOne, lomask);
           float b = pow(slope,loHarmonicsInt) * lookupi1(table0, table1, sinPhaseLo, lomask) - pow(slope,hiHarmonicsIntPlusOne) * lookupi1(table0, table1, sinPhaseHiPlusOne, lomask);
@@ -1627,7 +1628,7 @@ void BLOsc2_next_akkka(BLOsc2 *unit, int inNumSamples)
           float fractionalExtraHarmonics = extraHarmonicsAdjust * pow(slope,hiHarmonicsIntPlusOne) * lookupi1(table0, table1, sinPhaseHiPlusOne, lomask);
           
           float z = ((((b*c) - (a*d))  / ((c*c) + (d*d))) - (((f*g) - (e*h))  / ((g*g) + (h*h))) + fractionalFundamental + fractionalExtraHarmonics) / ampFactor;
-          phase += (int32)(cpstoinc * ZXP(freqin));
+          phase += (int32_t)(cpstoinc * ZXP(freqin));
           ZXP(out) = z;
           );
     unit->m_phase = phase;
@@ -1646,8 +1647,8 @@ void BLOsc2_next_akkak(BLOsc2 *unit, int inNumSamples)
     float *table0 = ft->mSineWavetable;
     float *table1 = table0 + 1;
     
-    int32 phase = unit->m_phase;
-    int32 lomask = unit->m_lomask;
+    int32_t phase = unit->m_phase;
+    int32_t lomask = unit->m_lomask;
     
     float cpstoinc = unit->m_cpstoinc;
     float radtoinc = unit->m_radtoinc;
@@ -1655,19 +1656,19 @@ void BLOsc2_next_akkak(BLOsc2 *unit, int inNumSamples)
     
     LOOP1(inNumSamples,
           float loHarmonics = loHarmonicsin;
-          int32 loHarmonicsInt = ceil(loHarmonics);
-          int32 loHarmonicsIntMinusOne = loHarmonicsInt - 1;
+          int32_t loHarmonicsInt = ceil(loHarmonics);
+          int32_t loHarmonicsIntMinusOne = loHarmonicsInt - 1;
           float loHarmonicsFrac = loHarmonicsInt - loHarmonics;
           
           float hiHarmonics = hiHarmonicsin;
-          int32 hiHarmonicsInt = floor(hiHarmonics);
+          int32_t hiHarmonicsInt = floor(hiHarmonics);
           float hiHarmonicsFrac = hiHarmonics - hiHarmonicsInt;
           
-          int32 hiHarmonicsIntPlusOne = hiHarmonicsInt + 1;
-          int32 loEvenHarmonics = loHarmonicsInt%2 == 0? loHarmonicsInt : loHarmonicsInt + 1; // The lowest even harmonic index
-          int32 hiEvenHarmonics = hiHarmonicsInt%2 == 0? hiHarmonicsInt : hiHarmonicsInt - 1; // The highest even harmonic index
-          int32 hiEvenHarmonicsPlusTwo = hiEvenHarmonics + 2;
-          int32 numEvenHarmonics = (hiEvenHarmonics - loEvenHarmonics) / 2 + 1; //The total number of even harmonics
+          int32_t hiHarmonicsIntPlusOne = hiHarmonicsInt + 1;
+          int32_t loEvenHarmonics = loHarmonicsInt%2 == 0? loHarmonicsInt : loHarmonicsInt + 1; // The lowest even harmonic index
+          int32_t hiEvenHarmonics = hiHarmonicsInt%2 == 0? hiHarmonicsInt : hiHarmonicsInt - 1; // The highest even harmonic index
+          int32_t hiEvenHarmonicsPlusTwo = hiEvenHarmonics + 2;
+          int32_t numEvenHarmonics = (hiEvenHarmonics - loEvenHarmonics) / 2 + 1; //The total number of even harmonics
           
           float slope = ZXP(slopein);
           float evenOddRatio = evenOddRatioin;
@@ -1679,19 +1680,19 @@ void BLOsc2_next_akkak(BLOsc2 *unit, int inNumSamples)
           float ampFactor = 0.99<slope&&slope<1.01? (hiHarmonicsInt - loHarmonicsInt + 1) - evenOddFactor * numEvenHarmonics + fundamentalAdjust + extraHarmonicsAdjust:((pow(slope,loHarmonicsInt) - pow(slope,hiHarmonicsIntPlusOne)) / (1 - slope)) - (evenOddFactor * (pow(slope, loEvenHarmonics) - pow(slope, hiEvenHarmonicsPlusTwo)) / (1 - pow(slope, 2))) + fundamentalAdjust * pow(slope,loHarmonicsIntMinusOne) + extraHarmonicsAdjust * pow(slope, hiHarmonicsIntPlusOne);
           //ampFactor will be used to normalize the output amplitude. To avoid the denominator of this calculation to be 0 when slope = 1, the different formula is used when slope falls between 0.99 and 1.01.
           
-          int32 sinPhaseBase = phase;
-          int32 cosPhaseBase = phase + (int32)(radtoinc * pi2);
-          int32 sinPhaseLo = phase * loHarmonicsInt;
-          int32 sinPhaseLoMinusOne = phase * loHarmonicsIntMinusOne;
-          int32 cosPhaseLo = phase * loHarmonicsInt + (int32)(radtoinc * pi2);
-          int32 sinPhaseHiPlusOne = phase * hiHarmonicsIntPlusOne;
-          int32 cosPhaseHiPlusOne = phase * hiHarmonicsIntPlusOne + (int32)(radtoinc * pi2);
-          int32 sinPhase2 = phase * 2;
-          int32 cosPhase2 = phase * 2 + (int32)(radtoinc * pi2);
-          int32 sinPhaseLoEven = phase * loEvenHarmonics;
-          int32 cosPhaseLoEven = phase * loEvenHarmonics + (int32)(radtoinc * pi2);
-          int32 sinPhaseHiEvenPlusTwo = phase * hiEvenHarmonicsPlusTwo;
-          int32 cosPhaseHiEvenPlusTWo = phase * hiEvenHarmonicsPlusTwo + (int32)(radtoinc * pi2);
+          int32_t sinPhaseBase = phase;
+          int32_t cosPhaseBase = phase + (int32_t)(radtoinc * pi2);
+          int32_t sinPhaseLo = phase * loHarmonicsInt;
+          int32_t sinPhaseLoMinusOne = phase * loHarmonicsIntMinusOne;
+          int32_t cosPhaseLo = phase * loHarmonicsInt + (int32_t)(radtoinc * pi2);
+          int32_t sinPhaseHiPlusOne = phase * hiHarmonicsIntPlusOne;
+          int32_t cosPhaseHiPlusOne = phase * hiHarmonicsIntPlusOne + (int32_t)(radtoinc * pi2);
+          int32_t sinPhase2 = phase * 2;
+          int32_t cosPhase2 = phase * 2 + (int32_t)(radtoinc * pi2);
+          int32_t sinPhaseLoEven = phase * loEvenHarmonics;
+          int32_t cosPhaseLoEven = phase * loEvenHarmonics + (int32_t)(radtoinc * pi2);
+          int32_t sinPhaseHiEvenPlusTwo = phase * hiEvenHarmonicsPlusTwo;
+          int32_t cosPhaseHiEvenPlusTWo = phase * hiEvenHarmonicsPlusTwo + (int32_t)(radtoinc * pi2);
           
           float a = pow(slope,loHarmonicsInt) * lookupi1(table0, table1, cosPhaseLo, lomask) - pow(slope,hiHarmonicsIntPlusOne) * lookupi1(table0, table1, cosPhaseHiPlusOne, lomask);
           float b = pow(slope,loHarmonicsInt) * lookupi1(table0, table1, sinPhaseLo, lomask) - pow(slope,hiHarmonicsIntPlusOne) * lookupi1(table0, table1, sinPhaseHiPlusOne, lomask);
@@ -1706,7 +1707,7 @@ void BLOsc2_next_akkak(BLOsc2 *unit, int inNumSamples)
           float fractionalExtraHarmonics = extraHarmonicsAdjust * pow(slope,hiHarmonicsIntPlusOne) * lookupi1(table0, table1, sinPhaseHiPlusOne, lomask);
           
           float z = ((((b*c) - (a*d))  / ((c*c) + (d*d))) - (((f*g) - (e*h))  / ((g*g) + (h*h))) + fractionalFundamental + fractionalExtraHarmonics) / ampFactor;
-          phase += (int32)(cpstoinc * ZXP(freqin));
+          phase += (int32_t)(cpstoinc * ZXP(freqin));
           ZXP(out) = z;
           );
     unit->m_phase = phase;
@@ -1725,8 +1726,8 @@ void BLOsc2_next_akkaa(BLOsc2 *unit, int inNumSamples)
     float *table0 = ft->mSineWavetable;
     float *table1 = table0 + 1;
     
-    int32 phase = unit->m_phase;
-    int32 lomask = unit->m_lomask;
+    int32_t phase = unit->m_phase;
+    int32_t lomask = unit->m_lomask;
     
     float cpstoinc = unit->m_cpstoinc;
     float radtoinc = unit->m_radtoinc;
@@ -1734,19 +1735,19 @@ void BLOsc2_next_akkaa(BLOsc2 *unit, int inNumSamples)
     
     LOOP1(inNumSamples,
           float loHarmonics = loHarmonicsin;
-          int32 loHarmonicsInt = ceil(loHarmonics);
-          int32 loHarmonicsIntMinusOne = loHarmonicsInt - 1;
+          int32_t loHarmonicsInt = ceil(loHarmonics);
+          int32_t loHarmonicsIntMinusOne = loHarmonicsInt - 1;
           float loHarmonicsFrac = loHarmonicsInt - loHarmonics;
           
           float hiHarmonics = hiHarmonicsin;
-          int32 hiHarmonicsInt = floor(hiHarmonics);
+          int32_t hiHarmonicsInt = floor(hiHarmonics);
           float hiHarmonicsFrac = hiHarmonics - hiHarmonicsInt;
           
-          int32 hiHarmonicsIntPlusOne = hiHarmonicsInt + 1;
-          int32 loEvenHarmonics = loHarmonicsInt%2 == 0? loHarmonicsInt : loHarmonicsInt + 1; // The lowest even harmonic index
-          int32 hiEvenHarmonics = hiHarmonicsInt%2 == 0? hiHarmonicsInt : hiHarmonicsInt - 1; // The highest even harmonic index
-          int32 hiEvenHarmonicsPlusTwo = hiEvenHarmonics + 2;
-          int32 numEvenHarmonics = (hiEvenHarmonics - loEvenHarmonics) / 2 + 1; //The total number of even harmonics
+          int32_t hiHarmonicsIntPlusOne = hiHarmonicsInt + 1;
+          int32_t loEvenHarmonics = loHarmonicsInt%2 == 0? loHarmonicsInt : loHarmonicsInt + 1; // The lowest even harmonic index
+          int32_t hiEvenHarmonics = hiHarmonicsInt%2 == 0? hiHarmonicsInt : hiHarmonicsInt - 1; // The highest even harmonic index
+          int32_t hiEvenHarmonicsPlusTwo = hiEvenHarmonics + 2;
+          int32_t numEvenHarmonics = (hiEvenHarmonics - loEvenHarmonics) / 2 + 1; //The total number of even harmonics
           
           float slope = ZXP(slopein);
           float evenOddRatio = ZXP(evenOddRatioin);
@@ -1758,19 +1759,19 @@ void BLOsc2_next_akkaa(BLOsc2 *unit, int inNumSamples)
           float ampFactor = 0.99<slope&&slope<1.01? (hiHarmonicsInt - loHarmonicsInt + 1) - evenOddFactor * numEvenHarmonics + fundamentalAdjust + extraHarmonicsAdjust:((pow(slope,loHarmonicsInt) - pow(slope,hiHarmonicsIntPlusOne)) / (1 - slope)) - (evenOddFactor * (pow(slope, loEvenHarmonics) - pow(slope, hiEvenHarmonicsPlusTwo)) / (1 - pow(slope, 2))) + fundamentalAdjust * pow(slope,loHarmonicsIntMinusOne) + extraHarmonicsAdjust * pow(slope, hiHarmonicsIntPlusOne);
           //ampFactor will be used to normalize the output amplitude. To avoid the denominator of this calculation to be 0 when slope = 1, the different formula is used when slope falls between 0.99 and 1.01.
           
-          int32 sinPhaseBase = phase;
-          int32 cosPhaseBase = phase + (int32)(radtoinc * pi2);
-          int32 sinPhaseLo = phase * loHarmonicsInt;
-          int32 sinPhaseLoMinusOne = phase * loHarmonicsIntMinusOne;
-          int32 cosPhaseLo = phase * loHarmonicsInt + (int32)(radtoinc * pi2);
-          int32 sinPhaseHiPlusOne = phase * hiHarmonicsIntPlusOne;
-          int32 cosPhaseHiPlusOne = phase * hiHarmonicsIntPlusOne + (int32)(radtoinc * pi2);
-          int32 sinPhase2 = phase * 2;
-          int32 cosPhase2 = phase * 2 + (int32)(radtoinc * pi2);
-          int32 sinPhaseLoEven = phase * loEvenHarmonics;
-          int32 cosPhaseLoEven = phase * loEvenHarmonics + (int32)(radtoinc * pi2);
-          int32 sinPhaseHiEvenPlusTwo = phase * hiEvenHarmonicsPlusTwo;
-          int32 cosPhaseHiEvenPlusTWo = phase * hiEvenHarmonicsPlusTwo + (int32)(radtoinc * pi2);
+          int32_t sinPhaseBase = phase;
+          int32_t cosPhaseBase = phase + (int32_t)(radtoinc * pi2);
+          int32_t sinPhaseLo = phase * loHarmonicsInt;
+          int32_t sinPhaseLoMinusOne = phase * loHarmonicsIntMinusOne;
+          int32_t cosPhaseLo = phase * loHarmonicsInt + (int32_t)(radtoinc * pi2);
+          int32_t sinPhaseHiPlusOne = phase * hiHarmonicsIntPlusOne;
+          int32_t cosPhaseHiPlusOne = phase * hiHarmonicsIntPlusOne + (int32_t)(radtoinc * pi2);
+          int32_t sinPhase2 = phase * 2;
+          int32_t cosPhase2 = phase * 2 + (int32_t)(radtoinc * pi2);
+          int32_t sinPhaseLoEven = phase * loEvenHarmonics;
+          int32_t cosPhaseLoEven = phase * loEvenHarmonics + (int32_t)(radtoinc * pi2);
+          int32_t sinPhaseHiEvenPlusTwo = phase * hiEvenHarmonicsPlusTwo;
+          int32_t cosPhaseHiEvenPlusTWo = phase * hiEvenHarmonicsPlusTwo + (int32_t)(radtoinc * pi2);
           
           float a = pow(slope,loHarmonicsInt) * lookupi1(table0, table1, cosPhaseLo, lomask) - pow(slope,hiHarmonicsIntPlusOne) * lookupi1(table0, table1, cosPhaseHiPlusOne, lomask);
           float b = pow(slope,loHarmonicsInt) * lookupi1(table0, table1, sinPhaseLo, lomask) - pow(slope,hiHarmonicsIntPlusOne) * lookupi1(table0, table1, sinPhaseHiPlusOne, lomask);
@@ -1785,7 +1786,7 @@ void BLOsc2_next_akkaa(BLOsc2 *unit, int inNumSamples)
           float fractionalExtraHarmonics = extraHarmonicsAdjust * pow(slope,hiHarmonicsIntPlusOne) * lookupi1(table0, table1, sinPhaseHiPlusOne, lomask);
           
           float z = ((((b*c) - (a*d))  / ((c*c) + (d*d))) - (((f*g) - (e*h))  / ((g*g) + (h*h))) + fractionalFundamental + fractionalExtraHarmonics) / ampFactor;
-          phase += (int32)(cpstoinc * ZXP(freqin));
+          phase += (int32_t)(cpstoinc * ZXP(freqin));
           ZXP(out) = z;
           );
     unit->m_phase = phase;
@@ -1804,8 +1805,8 @@ void BLOsc2_next_akakk(BLOsc2 *unit, int inNumSamples)
     float *table0 = ft->mSineWavetable;
     float *table1 = table0 + 1;
     
-    int32 phase = unit->m_phase;
-    int32 lomask = unit->m_lomask;
+    int32_t phase = unit->m_phase;
+    int32_t lomask = unit->m_lomask;
     
     float cpstoinc = unit->m_cpstoinc;
     float radtoinc = unit->m_radtoinc;
@@ -1813,19 +1814,19 @@ void BLOsc2_next_akakk(BLOsc2 *unit, int inNumSamples)
     
     LOOP1(inNumSamples,
           float loHarmonics = loHarmonicsin;
-          int32 loHarmonicsInt = ceil(loHarmonics);
-          int32 loHarmonicsIntMinusOne = loHarmonicsInt - 1;
+          int32_t loHarmonicsInt = ceil(loHarmonics);
+          int32_t loHarmonicsIntMinusOne = loHarmonicsInt - 1;
           float loHarmonicsFrac = loHarmonicsInt - loHarmonics;
           
           float hiHarmonics = ZXP(hiHarmonicsin);
-          int32 hiHarmonicsInt = floor(hiHarmonics);
+          int32_t hiHarmonicsInt = floor(hiHarmonics);
           float hiHarmonicsFrac = hiHarmonics - hiHarmonicsInt;
           
-          int32 hiHarmonicsIntPlusOne = hiHarmonicsInt + 1;
-          int32 loEvenHarmonics = loHarmonicsInt%2 == 0? loHarmonicsInt : loHarmonicsInt + 1; // The lowest even harmonic index
-          int32 hiEvenHarmonics = hiHarmonicsInt%2 == 0? hiHarmonicsInt : hiHarmonicsInt - 1; // The highest even harmonic index
-          int32 hiEvenHarmonicsPlusTwo = hiEvenHarmonics + 2;
-          int32 numEvenHarmonics = (hiEvenHarmonics - loEvenHarmonics) / 2 + 1; //The total number of even harmonics
+          int32_t hiHarmonicsIntPlusOne = hiHarmonicsInt + 1;
+          int32_t loEvenHarmonics = loHarmonicsInt%2 == 0? loHarmonicsInt : loHarmonicsInt + 1; // The lowest even harmonic index
+          int32_t hiEvenHarmonics = hiHarmonicsInt%2 == 0? hiHarmonicsInt : hiHarmonicsInt - 1; // The highest even harmonic index
+          int32_t hiEvenHarmonicsPlusTwo = hiEvenHarmonics + 2;
+          int32_t numEvenHarmonics = (hiEvenHarmonics - loEvenHarmonics) / 2 + 1; //The total number of even harmonics
           
           float slope = slopein;
           float evenOddRatio = evenOddRatioin;
@@ -1837,19 +1838,19 @@ void BLOsc2_next_akakk(BLOsc2 *unit, int inNumSamples)
           float ampFactor = 0.99<slope&&slope<1.01? (hiHarmonicsInt - loHarmonicsInt + 1) - evenOddFactor * numEvenHarmonics + fundamentalAdjust + extraHarmonicsAdjust:((pow(slope,loHarmonicsInt) - pow(slope,hiHarmonicsIntPlusOne)) / (1 - slope)) - (evenOddFactor * (pow(slope, loEvenHarmonics) - pow(slope, hiEvenHarmonicsPlusTwo)) / (1 - pow(slope, 2))) + fundamentalAdjust * pow(slope,loHarmonicsIntMinusOne) + extraHarmonicsAdjust * pow(slope, hiHarmonicsIntPlusOne);
           //ampFactor will be used to normalize the output amplitude. To avoid the denominator of this calculation to be 0 when slope = 1, the different formula is used when slope falls between 0.99 and 1.01.
           
-          int32 sinPhaseBase = phase;
-          int32 cosPhaseBase = phase + (int32)(radtoinc * pi2);
-          int32 sinPhaseLo = phase * loHarmonicsInt;
-          int32 sinPhaseLoMinusOne = phase * loHarmonicsIntMinusOne;
-          int32 cosPhaseLo = phase * loHarmonicsInt + (int32)(radtoinc * pi2);
-          int32 sinPhaseHiPlusOne = phase * hiHarmonicsIntPlusOne;
-          int32 cosPhaseHiPlusOne = phase * hiHarmonicsIntPlusOne + (int32)(radtoinc * pi2);
-          int32 sinPhase2 = phase * 2;
-          int32 cosPhase2 = phase * 2 + (int32)(radtoinc * pi2);
-          int32 sinPhaseLoEven = phase * loEvenHarmonics;
-          int32 cosPhaseLoEven = phase * loEvenHarmonics + (int32)(radtoinc * pi2);
-          int32 sinPhaseHiEvenPlusTwo = phase * hiEvenHarmonicsPlusTwo;
-          int32 cosPhaseHiEvenPlusTWo = phase * hiEvenHarmonicsPlusTwo + (int32)(radtoinc * pi2);
+          int32_t sinPhaseBase = phase;
+          int32_t cosPhaseBase = phase + (int32_t)(radtoinc * pi2);
+          int32_t sinPhaseLo = phase * loHarmonicsInt;
+          int32_t sinPhaseLoMinusOne = phase * loHarmonicsIntMinusOne;
+          int32_t cosPhaseLo = phase * loHarmonicsInt + (int32_t)(radtoinc * pi2);
+          int32_t sinPhaseHiPlusOne = phase * hiHarmonicsIntPlusOne;
+          int32_t cosPhaseHiPlusOne = phase * hiHarmonicsIntPlusOne + (int32_t)(radtoinc * pi2);
+          int32_t sinPhase2 = phase * 2;
+          int32_t cosPhase2 = phase * 2 + (int32_t)(radtoinc * pi2);
+          int32_t sinPhaseLoEven = phase * loEvenHarmonics;
+          int32_t cosPhaseLoEven = phase * loEvenHarmonics + (int32_t)(radtoinc * pi2);
+          int32_t sinPhaseHiEvenPlusTwo = phase * hiEvenHarmonicsPlusTwo;
+          int32_t cosPhaseHiEvenPlusTWo = phase * hiEvenHarmonicsPlusTwo + (int32_t)(radtoinc * pi2);
           
           float a = pow(slope,loHarmonicsInt) * lookupi1(table0, table1, cosPhaseLo, lomask) - pow(slope,hiHarmonicsIntPlusOne) * lookupi1(table0, table1, cosPhaseHiPlusOne, lomask);
           float b = pow(slope,loHarmonicsInt) * lookupi1(table0, table1, sinPhaseLo, lomask) - pow(slope,hiHarmonicsIntPlusOne) * lookupi1(table0, table1, sinPhaseHiPlusOne, lomask);
@@ -1864,7 +1865,7 @@ void BLOsc2_next_akakk(BLOsc2 *unit, int inNumSamples)
           float fractionalExtraHarmonics = extraHarmonicsAdjust * pow(slope,hiHarmonicsIntPlusOne) * lookupi1(table0, table1, sinPhaseHiPlusOne, lomask);
           
           float z = ((((b*c) - (a*d))  / ((c*c) + (d*d))) - (((f*g) - (e*h))  / ((g*g) + (h*h))) + fractionalFundamental + fractionalExtraHarmonics) / ampFactor;
-          phase += (int32)(cpstoinc * ZXP(freqin));
+          phase += (int32_t)(cpstoinc * ZXP(freqin));
           ZXP(out) = z;
           );
     unit->m_phase = phase;
@@ -1883,8 +1884,8 @@ void BLOsc2_next_akaka(BLOsc2 *unit, int inNumSamples)
     float *table0 = ft->mSineWavetable;
     float *table1 = table0 + 1;
     
-    int32 phase = unit->m_phase;
-    int32 lomask = unit->m_lomask;
+    int32_t phase = unit->m_phase;
+    int32_t lomask = unit->m_lomask;
     
     float cpstoinc = unit->m_cpstoinc;
     float radtoinc = unit->m_radtoinc;
@@ -1892,19 +1893,19 @@ void BLOsc2_next_akaka(BLOsc2 *unit, int inNumSamples)
     
     LOOP1(inNumSamples,
           float loHarmonics = loHarmonicsin;
-          int32 loHarmonicsInt = ceil(loHarmonics);
-          int32 loHarmonicsIntMinusOne = loHarmonicsInt - 1;
+          int32_t loHarmonicsInt = ceil(loHarmonics);
+          int32_t loHarmonicsIntMinusOne = loHarmonicsInt - 1;
           float loHarmonicsFrac = loHarmonicsInt - loHarmonics;
           
           float hiHarmonics = ZXP(hiHarmonicsin);
-          int32 hiHarmonicsInt = floor(hiHarmonics);
+          int32_t hiHarmonicsInt = floor(hiHarmonics);
           float hiHarmonicsFrac = hiHarmonics - hiHarmonicsInt;
           
-          int32 hiHarmonicsIntPlusOne = hiHarmonicsInt + 1;
-          int32 loEvenHarmonics = loHarmonicsInt%2 == 0? loHarmonicsInt : loHarmonicsInt + 1; // The lowest even harmonic index
-          int32 hiEvenHarmonics = hiHarmonicsInt%2 == 0? hiHarmonicsInt : hiHarmonicsInt - 1; // The highest even harmonic index
-          int32 hiEvenHarmonicsPlusTwo = hiEvenHarmonics + 2;
-          int32 numEvenHarmonics = (hiEvenHarmonics - loEvenHarmonics) / 2 + 1; //The total number of even harmonics
+          int32_t hiHarmonicsIntPlusOne = hiHarmonicsInt + 1;
+          int32_t loEvenHarmonics = loHarmonicsInt%2 == 0? loHarmonicsInt : loHarmonicsInt + 1; // The lowest even harmonic index
+          int32_t hiEvenHarmonics = hiHarmonicsInt%2 == 0? hiHarmonicsInt : hiHarmonicsInt - 1; // The highest even harmonic index
+          int32_t hiEvenHarmonicsPlusTwo = hiEvenHarmonics + 2;
+          int32_t numEvenHarmonics = (hiEvenHarmonics - loEvenHarmonics) / 2 + 1; //The total number of even harmonics
           
           float slope = slopein;
           float evenOddRatio = ZXP(evenOddRatioin);
@@ -1916,19 +1917,19 @@ void BLOsc2_next_akaka(BLOsc2 *unit, int inNumSamples)
           float ampFactor = 0.99<slope&&slope<1.01? (hiHarmonicsInt - loHarmonicsInt + 1) - evenOddFactor * numEvenHarmonics + fundamentalAdjust + extraHarmonicsAdjust:((pow(slope,loHarmonicsInt) - pow(slope,hiHarmonicsIntPlusOne)) / (1 - slope)) - (evenOddFactor * (pow(slope, loEvenHarmonics) - pow(slope, hiEvenHarmonicsPlusTwo)) / (1 - pow(slope, 2))) + fundamentalAdjust * pow(slope,loHarmonicsIntMinusOne) + extraHarmonicsAdjust * pow(slope, hiHarmonicsIntPlusOne);
           //ampFactor will be used to normalize the output amplitude. To avoid the denominator of this calculation to be 0 when slope = 1, the different formula is used when slope falls between 0.99 and 1.01.
           
-          int32 sinPhaseBase = phase;
-          int32 cosPhaseBase = phase + (int32)(radtoinc * pi2);
-          int32 sinPhaseLo = phase * loHarmonicsInt;
-          int32 sinPhaseLoMinusOne = phase * loHarmonicsIntMinusOne;
-          int32 cosPhaseLo = phase * loHarmonicsInt + (int32)(radtoinc * pi2);
-          int32 sinPhaseHiPlusOne = phase * hiHarmonicsIntPlusOne;
-          int32 cosPhaseHiPlusOne = phase * hiHarmonicsIntPlusOne + (int32)(radtoinc * pi2);
-          int32 sinPhase2 = phase * 2;
-          int32 cosPhase2 = phase * 2 + (int32)(radtoinc * pi2);
-          int32 sinPhaseLoEven = phase * loEvenHarmonics;
-          int32 cosPhaseLoEven = phase * loEvenHarmonics + (int32)(radtoinc * pi2);
-          int32 sinPhaseHiEvenPlusTwo = phase * hiEvenHarmonicsPlusTwo;
-          int32 cosPhaseHiEvenPlusTWo = phase * hiEvenHarmonicsPlusTwo + (int32)(radtoinc * pi2);
+          int32_t sinPhaseBase = phase;
+          int32_t cosPhaseBase = phase + (int32_t)(radtoinc * pi2);
+          int32_t sinPhaseLo = phase * loHarmonicsInt;
+          int32_t sinPhaseLoMinusOne = phase * loHarmonicsIntMinusOne;
+          int32_t cosPhaseLo = phase * loHarmonicsInt + (int32_t)(radtoinc * pi2);
+          int32_t sinPhaseHiPlusOne = phase * hiHarmonicsIntPlusOne;
+          int32_t cosPhaseHiPlusOne = phase * hiHarmonicsIntPlusOne + (int32_t)(radtoinc * pi2);
+          int32_t sinPhase2 = phase * 2;
+          int32_t cosPhase2 = phase * 2 + (int32_t)(radtoinc * pi2);
+          int32_t sinPhaseLoEven = phase * loEvenHarmonics;
+          int32_t cosPhaseLoEven = phase * loEvenHarmonics + (int32_t)(radtoinc * pi2);
+          int32_t sinPhaseHiEvenPlusTwo = phase * hiEvenHarmonicsPlusTwo;
+          int32_t cosPhaseHiEvenPlusTWo = phase * hiEvenHarmonicsPlusTwo + (int32_t)(radtoinc * pi2);
           
           float a = pow(slope,loHarmonicsInt) * lookupi1(table0, table1, cosPhaseLo, lomask) - pow(slope,hiHarmonicsIntPlusOne) * lookupi1(table0, table1, cosPhaseHiPlusOne, lomask);
           float b = pow(slope,loHarmonicsInt) * lookupi1(table0, table1, sinPhaseLo, lomask) - pow(slope,hiHarmonicsIntPlusOne) * lookupi1(table0, table1, sinPhaseHiPlusOne, lomask);
@@ -1943,7 +1944,7 @@ void BLOsc2_next_akaka(BLOsc2 *unit, int inNumSamples)
           float fractionalExtraHarmonics = extraHarmonicsAdjust * pow(slope,hiHarmonicsIntPlusOne) * lookupi1(table0, table1, sinPhaseHiPlusOne, lomask);
           
           float z = ((((b*c) - (a*d))  / ((c*c) + (d*d))) - (((f*g) - (e*h))  / ((g*g) + (h*h))) + fractionalFundamental + fractionalExtraHarmonics) / ampFactor;
-          phase += (int32)(cpstoinc * ZXP(freqin));
+          phase += (int32_t)(cpstoinc * ZXP(freqin));
           ZXP(out) = z;
           );
     unit->m_phase = phase;
@@ -1962,8 +1963,8 @@ void BLOsc2_next_akaak(BLOsc2 *unit, int inNumSamples)
     float *table0 = ft->mSineWavetable;
     float *table1 = table0 + 1;
     
-    int32 phase = unit->m_phase;
-    int32 lomask = unit->m_lomask;
+    int32_t phase = unit->m_phase;
+    int32_t lomask = unit->m_lomask;
     
     float cpstoinc = unit->m_cpstoinc;
     float radtoinc = unit->m_radtoinc;
@@ -1971,19 +1972,19 @@ void BLOsc2_next_akaak(BLOsc2 *unit, int inNumSamples)
     
     LOOP1(inNumSamples,
           float loHarmonics = loHarmonicsin;
-          int32 loHarmonicsInt = ceil(loHarmonics);
-          int32 loHarmonicsIntMinusOne = loHarmonicsInt - 1;
+          int32_t loHarmonicsInt = ceil(loHarmonics);
+          int32_t loHarmonicsIntMinusOne = loHarmonicsInt - 1;
           float loHarmonicsFrac = loHarmonicsInt - loHarmonics;
           
           float hiHarmonics = ZXP(hiHarmonicsin);
-          int32 hiHarmonicsInt = floor(hiHarmonics);
+          int32_t hiHarmonicsInt = floor(hiHarmonics);
           float hiHarmonicsFrac = hiHarmonics - hiHarmonicsInt;
           
-          int32 hiHarmonicsIntPlusOne = hiHarmonicsInt + 1;
-          int32 loEvenHarmonics = loHarmonicsInt%2 == 0? loHarmonicsInt : loHarmonicsInt + 1; // The lowest even harmonic index
-          int32 hiEvenHarmonics = hiHarmonicsInt%2 == 0? hiHarmonicsInt : hiHarmonicsInt - 1; // The highest even harmonic index
-          int32 hiEvenHarmonicsPlusTwo = hiEvenHarmonics + 2;
-          int32 numEvenHarmonics = (hiEvenHarmonics - loEvenHarmonics) / 2 + 1; //The total number of even harmonics
+          int32_t hiHarmonicsIntPlusOne = hiHarmonicsInt + 1;
+          int32_t loEvenHarmonics = loHarmonicsInt%2 == 0? loHarmonicsInt : loHarmonicsInt + 1; // The lowest even harmonic index
+          int32_t hiEvenHarmonics = hiHarmonicsInt%2 == 0? hiHarmonicsInt : hiHarmonicsInt - 1; // The highest even harmonic index
+          int32_t hiEvenHarmonicsPlusTwo = hiEvenHarmonics + 2;
+          int32_t numEvenHarmonics = (hiEvenHarmonics - loEvenHarmonics) / 2 + 1; //The total number of even harmonics
           
           float slope = ZXP(slopein);
           float evenOddRatio = evenOddRatioin;
@@ -1995,19 +1996,19 @@ void BLOsc2_next_akaak(BLOsc2 *unit, int inNumSamples)
           float ampFactor = 0.99<slope&&slope<1.01? (hiHarmonicsInt - loHarmonicsInt + 1) - evenOddFactor * numEvenHarmonics + fundamentalAdjust + extraHarmonicsAdjust:((pow(slope,loHarmonicsInt) - pow(slope,hiHarmonicsIntPlusOne)) / (1 - slope)) - (evenOddFactor * (pow(slope, loEvenHarmonics) - pow(slope, hiEvenHarmonicsPlusTwo)) / (1 - pow(slope, 2))) + fundamentalAdjust * pow(slope,loHarmonicsIntMinusOne) + extraHarmonicsAdjust * pow(slope, hiHarmonicsIntPlusOne);
           //ampFactor will be used to normalize the output amplitude. To avoid the denominator of this calculation to be 0 when slope = 1, the different formula is used when slope falls between 0.99 and 1.01.
           
-          int32 sinPhaseBase = phase;
-          int32 cosPhaseBase = phase + (int32)(radtoinc * pi2);
-          int32 sinPhaseLo = phase * loHarmonicsInt;
-          int32 sinPhaseLoMinusOne = phase * loHarmonicsIntMinusOne;
-          int32 cosPhaseLo = phase * loHarmonicsInt + (int32)(radtoinc * pi2);
-          int32 sinPhaseHiPlusOne = phase * hiHarmonicsIntPlusOne;
-          int32 cosPhaseHiPlusOne = phase * hiHarmonicsIntPlusOne + (int32)(radtoinc * pi2);
-          int32 sinPhase2 = phase * 2;
-          int32 cosPhase2 = phase * 2 + (int32)(radtoinc * pi2);
-          int32 sinPhaseLoEven = phase * loEvenHarmonics;
-          int32 cosPhaseLoEven = phase * loEvenHarmonics + (int32)(radtoinc * pi2);
-          int32 sinPhaseHiEvenPlusTwo = phase * hiEvenHarmonicsPlusTwo;
-          int32 cosPhaseHiEvenPlusTWo = phase * hiEvenHarmonicsPlusTwo + (int32)(radtoinc * pi2);
+          int32_t sinPhaseBase = phase;
+          int32_t cosPhaseBase = phase + (int32_t)(radtoinc * pi2);
+          int32_t sinPhaseLo = phase * loHarmonicsInt;
+          int32_t sinPhaseLoMinusOne = phase * loHarmonicsIntMinusOne;
+          int32_t cosPhaseLo = phase * loHarmonicsInt + (int32_t)(radtoinc * pi2);
+          int32_t sinPhaseHiPlusOne = phase * hiHarmonicsIntPlusOne;
+          int32_t cosPhaseHiPlusOne = phase * hiHarmonicsIntPlusOne + (int32_t)(radtoinc * pi2);
+          int32_t sinPhase2 = phase * 2;
+          int32_t cosPhase2 = phase * 2 + (int32_t)(radtoinc * pi2);
+          int32_t sinPhaseLoEven = phase * loEvenHarmonics;
+          int32_t cosPhaseLoEven = phase * loEvenHarmonics + (int32_t)(radtoinc * pi2);
+          int32_t sinPhaseHiEvenPlusTwo = phase * hiEvenHarmonicsPlusTwo;
+          int32_t cosPhaseHiEvenPlusTWo = phase * hiEvenHarmonicsPlusTwo + (int32_t)(radtoinc * pi2);
           
           float a = pow(slope,loHarmonicsInt) * lookupi1(table0, table1, cosPhaseLo, lomask) - pow(slope,hiHarmonicsIntPlusOne) * lookupi1(table0, table1, cosPhaseHiPlusOne, lomask);
           float b = pow(slope,loHarmonicsInt) * lookupi1(table0, table1, sinPhaseLo, lomask) - pow(slope,hiHarmonicsIntPlusOne) * lookupi1(table0, table1, sinPhaseHiPlusOne, lomask);
@@ -2022,7 +2023,7 @@ void BLOsc2_next_akaak(BLOsc2 *unit, int inNumSamples)
           float fractionalExtraHarmonics = extraHarmonicsAdjust * pow(slope,hiHarmonicsIntPlusOne) * lookupi1(table0, table1, sinPhaseHiPlusOne, lomask);
           
           float z = ((((b*c) - (a*d))  / ((c*c) + (d*d))) - (((f*g) - (e*h))  / ((g*g) + (h*h))) + fractionalFundamental + fractionalExtraHarmonics) / ampFactor;
-          phase += (int32)(cpstoinc * ZXP(freqin));
+          phase += (int32_t)(cpstoinc * ZXP(freqin));
           ZXP(out) = z;
           );
     unit->m_phase = phase;
@@ -2041,8 +2042,8 @@ void BLOsc2_next_akaaa(BLOsc2 *unit, int inNumSamples)
     float *table0 = ft->mSineWavetable;
     float *table1 = table0 + 1;
     
-    int32 phase = unit->m_phase;
-    int32 lomask = unit->m_lomask;
+    int32_t phase = unit->m_phase;
+    int32_t lomask = unit->m_lomask;
     
     float cpstoinc = unit->m_cpstoinc;
     float radtoinc = unit->m_radtoinc;
@@ -2050,19 +2051,19 @@ void BLOsc2_next_akaaa(BLOsc2 *unit, int inNumSamples)
     
     LOOP1(inNumSamples,
           float loHarmonics = loHarmonicsin;
-          int32 loHarmonicsInt = ceil(loHarmonics);
-          int32 loHarmonicsIntMinusOne = loHarmonicsInt - 1;
+          int32_t loHarmonicsInt = ceil(loHarmonics);
+          int32_t loHarmonicsIntMinusOne = loHarmonicsInt - 1;
           float loHarmonicsFrac = loHarmonicsInt - loHarmonics;
           
           float hiHarmonics = ZXP(hiHarmonicsin);
-          int32 hiHarmonicsInt = floor(hiHarmonics);
+          int32_t hiHarmonicsInt = floor(hiHarmonics);
           float hiHarmonicsFrac = hiHarmonics - hiHarmonicsInt;
           
-          int32 hiHarmonicsIntPlusOne = hiHarmonicsInt + 1;
-          int32 loEvenHarmonics = loHarmonicsInt%2 == 0? loHarmonicsInt : loHarmonicsInt + 1; // The lowest even harmonic index
-          int32 hiEvenHarmonics = hiHarmonicsInt%2 == 0? hiHarmonicsInt : hiHarmonicsInt - 1; // The highest even harmonic index
-          int32 hiEvenHarmonicsPlusTwo = hiEvenHarmonics + 2;
-          int32 numEvenHarmonics = (hiEvenHarmonics - loEvenHarmonics) / 2 + 1; //The total number of even harmonics
+          int32_t hiHarmonicsIntPlusOne = hiHarmonicsInt + 1;
+          int32_t loEvenHarmonics = loHarmonicsInt%2 == 0? loHarmonicsInt : loHarmonicsInt + 1; // The lowest even harmonic index
+          int32_t hiEvenHarmonics = hiHarmonicsInt%2 == 0? hiHarmonicsInt : hiHarmonicsInt - 1; // The highest even harmonic index
+          int32_t hiEvenHarmonicsPlusTwo = hiEvenHarmonics + 2;
+          int32_t numEvenHarmonics = (hiEvenHarmonics - loEvenHarmonics) / 2 + 1; //The total number of even harmonics
           
           float slope = ZXP(slopein);
           float evenOddRatio = ZXP(evenOddRatioin);
@@ -2074,19 +2075,19 @@ void BLOsc2_next_akaaa(BLOsc2 *unit, int inNumSamples)
           float ampFactor = 0.99<slope&&slope<1.01? (hiHarmonicsInt - loHarmonicsInt + 1) - evenOddFactor * numEvenHarmonics + fundamentalAdjust + extraHarmonicsAdjust:((pow(slope,loHarmonicsInt) - pow(slope,hiHarmonicsIntPlusOne)) / (1 - slope)) - (evenOddFactor * (pow(slope, loEvenHarmonics) - pow(slope, hiEvenHarmonicsPlusTwo)) / (1 - pow(slope, 2))) + fundamentalAdjust * pow(slope,loHarmonicsIntMinusOne) + extraHarmonicsAdjust * pow(slope, hiHarmonicsIntPlusOne);
           //ampFactor will be used to normalize the output amplitude. To avoid the denominator of this calculation to be 0 when slope = 1, the different formula is used when slope falls between 0.99 and 1.01.
           
-          int32 sinPhaseBase = phase;
-          int32 cosPhaseBase = phase + (int32)(radtoinc * pi2);
-          int32 sinPhaseLo = phase * loHarmonicsInt;
-          int32 sinPhaseLoMinusOne = phase * loHarmonicsIntMinusOne;
-          int32 cosPhaseLo = phase * loHarmonicsInt + (int32)(radtoinc * pi2);
-          int32 sinPhaseHiPlusOne = phase * hiHarmonicsIntPlusOne;
-          int32 cosPhaseHiPlusOne = phase * hiHarmonicsIntPlusOne + (int32)(radtoinc * pi2);
-          int32 sinPhase2 = phase * 2;
-          int32 cosPhase2 = phase * 2 + (int32)(radtoinc * pi2);
-          int32 sinPhaseLoEven = phase * loEvenHarmonics;
-          int32 cosPhaseLoEven = phase * loEvenHarmonics + (int32)(radtoinc * pi2);
-          int32 sinPhaseHiEvenPlusTwo = phase * hiEvenHarmonicsPlusTwo;
-          int32 cosPhaseHiEvenPlusTWo = phase * hiEvenHarmonicsPlusTwo + (int32)(radtoinc * pi2);
+          int32_t sinPhaseBase = phase;
+          int32_t cosPhaseBase = phase + (int32_t)(radtoinc * pi2);
+          int32_t sinPhaseLo = phase * loHarmonicsInt;
+          int32_t sinPhaseLoMinusOne = phase * loHarmonicsIntMinusOne;
+          int32_t cosPhaseLo = phase * loHarmonicsInt + (int32_t)(radtoinc * pi2);
+          int32_t sinPhaseHiPlusOne = phase * hiHarmonicsIntPlusOne;
+          int32_t cosPhaseHiPlusOne = phase * hiHarmonicsIntPlusOne + (int32_t)(radtoinc * pi2);
+          int32_t sinPhase2 = phase * 2;
+          int32_t cosPhase2 = phase * 2 + (int32_t)(radtoinc * pi2);
+          int32_t sinPhaseLoEven = phase * loEvenHarmonics;
+          int32_t cosPhaseLoEven = phase * loEvenHarmonics + (int32_t)(radtoinc * pi2);
+          int32_t sinPhaseHiEvenPlusTwo = phase * hiEvenHarmonicsPlusTwo;
+          int32_t cosPhaseHiEvenPlusTWo = phase * hiEvenHarmonicsPlusTwo + (int32_t)(radtoinc * pi2);
           
           float a = pow(slope,loHarmonicsInt) * lookupi1(table0, table1, cosPhaseLo, lomask) - pow(slope,hiHarmonicsIntPlusOne) * lookupi1(table0, table1, cosPhaseHiPlusOne, lomask);
           float b = pow(slope,loHarmonicsInt) * lookupi1(table0, table1, sinPhaseLo, lomask) - pow(slope,hiHarmonicsIntPlusOne) * lookupi1(table0, table1, sinPhaseHiPlusOne, lomask);
@@ -2101,7 +2102,7 @@ void BLOsc2_next_akaaa(BLOsc2 *unit, int inNumSamples)
           float fractionalExtraHarmonics = extraHarmonicsAdjust * pow(slope,hiHarmonicsIntPlusOne) * lookupi1(table0, table1, sinPhaseHiPlusOne, lomask);
           
           float z = ((((b*c) - (a*d))  / ((c*c) + (d*d))) - (((f*g) - (e*h))  / ((g*g) + (h*h))) + fractionalFundamental + fractionalExtraHarmonics) / ampFactor;
-          phase += (int32)(cpstoinc * ZXP(freqin));
+          phase += (int32_t)(cpstoinc * ZXP(freqin));
           ZXP(out) = z;
           );
     unit->m_phase = phase;
@@ -2120,8 +2121,8 @@ void BLOsc2_next_aakkk(BLOsc2 *unit, int inNumSamples)
     float *table0 = ft->mSineWavetable;
     float *table1 = table0 + 1;
     
-    int32 phase = unit->m_phase;
-    int32 lomask = unit->m_lomask;
+    int32_t phase = unit->m_phase;
+    int32_t lomask = unit->m_lomask;
     
     float cpstoinc = unit->m_cpstoinc;
     float radtoinc = unit->m_radtoinc;
@@ -2129,19 +2130,19 @@ void BLOsc2_next_aakkk(BLOsc2 *unit, int inNumSamples)
     
     LOOP1(inNumSamples,
           float loHarmonics = ZXP(loHarmonicsin);
-          int32 loHarmonicsInt = ceil(loHarmonics);
-          int32 loHarmonicsIntMinusOne = loHarmonicsInt - 1;
+          int32_t loHarmonicsInt = ceil(loHarmonics);
+          int32_t loHarmonicsIntMinusOne = loHarmonicsInt - 1;
           float loHarmonicsFrac = loHarmonicsInt - loHarmonics;
           
           float hiHarmonics = hiHarmonicsin;
-          int32 hiHarmonicsInt = floor(hiHarmonics);
+          int32_t hiHarmonicsInt = floor(hiHarmonics);
           float hiHarmonicsFrac = hiHarmonics - hiHarmonicsInt;
           
-          int32 hiHarmonicsIntPlusOne = hiHarmonicsInt + 1;
-          int32 loEvenHarmonics = loHarmonicsInt%2 == 0? loHarmonicsInt : loHarmonicsInt + 1; // The lowest even harmonic index
-          int32 hiEvenHarmonics = hiHarmonicsInt%2 == 0? hiHarmonicsInt : hiHarmonicsInt - 1; // The highest even harmonic index
-          int32 hiEvenHarmonicsPlusTwo = hiEvenHarmonics + 2;
-          int32 numEvenHarmonics = (hiEvenHarmonics - loEvenHarmonics) / 2 + 1; //The total number of even harmonics
+          int32_t hiHarmonicsIntPlusOne = hiHarmonicsInt + 1;
+          int32_t loEvenHarmonics = loHarmonicsInt%2 == 0? loHarmonicsInt : loHarmonicsInt + 1; // The lowest even harmonic index
+          int32_t hiEvenHarmonics = hiHarmonicsInt%2 == 0? hiHarmonicsInt : hiHarmonicsInt - 1; // The highest even harmonic index
+          int32_t hiEvenHarmonicsPlusTwo = hiEvenHarmonics + 2;
+          int32_t numEvenHarmonics = (hiEvenHarmonics - loEvenHarmonics) / 2 + 1; //The total number of even harmonics
           
           float slope = slopein;
           float evenOddRatio = evenOddRatioin;
@@ -2153,19 +2154,19 @@ void BLOsc2_next_aakkk(BLOsc2 *unit, int inNumSamples)
           float ampFactor = 0.99<slope&&slope<1.01? (hiHarmonicsInt - loHarmonicsInt + 1) - evenOddFactor * numEvenHarmonics + fundamentalAdjust + extraHarmonicsAdjust:((pow(slope,loHarmonicsInt) - pow(slope,hiHarmonicsIntPlusOne)) / (1 - slope)) - (evenOddFactor * (pow(slope, loEvenHarmonics) - pow(slope, hiEvenHarmonicsPlusTwo)) / (1 - pow(slope, 2))) + fundamentalAdjust * pow(slope,loHarmonicsIntMinusOne) + extraHarmonicsAdjust * pow(slope, hiHarmonicsIntPlusOne);
           //ampFactor will be used to normalize the output amplitude. To avoid the denominator of this calculation to be 0 when slope = 1, the different formula is used when slope falls between 0.99 and 1.01.
           
-          int32 sinPhaseBase = phase;
-          int32 cosPhaseBase = phase + (int32)(radtoinc * pi2);
-          int32 sinPhaseLo = phase * loHarmonicsInt;
-          int32 sinPhaseLoMinusOne = phase * loHarmonicsIntMinusOne;
-          int32 cosPhaseLo = phase * loHarmonicsInt + (int32)(radtoinc * pi2);
-          int32 sinPhaseHiPlusOne = phase * hiHarmonicsIntPlusOne;
-          int32 cosPhaseHiPlusOne = phase * hiHarmonicsIntPlusOne + (int32)(radtoinc * pi2);
-          int32 sinPhase2 = phase * 2;
-          int32 cosPhase2 = phase * 2 + (int32)(radtoinc * pi2);
-          int32 sinPhaseLoEven = phase * loEvenHarmonics;
-          int32 cosPhaseLoEven = phase * loEvenHarmonics + (int32)(radtoinc * pi2);
-          int32 sinPhaseHiEvenPlusTwo = phase * hiEvenHarmonicsPlusTwo;
-          int32 cosPhaseHiEvenPlusTWo = phase * hiEvenHarmonicsPlusTwo + (int32)(radtoinc * pi2);
+          int32_t sinPhaseBase = phase;
+          int32_t cosPhaseBase = phase + (int32_t)(radtoinc * pi2);
+          int32_t sinPhaseLo = phase * loHarmonicsInt;
+          int32_t sinPhaseLoMinusOne = phase * loHarmonicsIntMinusOne;
+          int32_t cosPhaseLo = phase * loHarmonicsInt + (int32_t)(radtoinc * pi2);
+          int32_t sinPhaseHiPlusOne = phase * hiHarmonicsIntPlusOne;
+          int32_t cosPhaseHiPlusOne = phase * hiHarmonicsIntPlusOne + (int32_t)(radtoinc * pi2);
+          int32_t sinPhase2 = phase * 2;
+          int32_t cosPhase2 = phase * 2 + (int32_t)(radtoinc * pi2);
+          int32_t sinPhaseLoEven = phase * loEvenHarmonics;
+          int32_t cosPhaseLoEven = phase * loEvenHarmonics + (int32_t)(radtoinc * pi2);
+          int32_t sinPhaseHiEvenPlusTwo = phase * hiEvenHarmonicsPlusTwo;
+          int32_t cosPhaseHiEvenPlusTWo = phase * hiEvenHarmonicsPlusTwo + (int32_t)(radtoinc * pi2);
           
           float a = pow(slope,loHarmonicsInt) * lookupi1(table0, table1, cosPhaseLo, lomask) - pow(slope,hiHarmonicsIntPlusOne) * lookupi1(table0, table1, cosPhaseHiPlusOne, lomask);
           float b = pow(slope,loHarmonicsInt) * lookupi1(table0, table1, sinPhaseLo, lomask) - pow(slope,hiHarmonicsIntPlusOne) * lookupi1(table0, table1, sinPhaseHiPlusOne, lomask);
@@ -2180,7 +2181,7 @@ void BLOsc2_next_aakkk(BLOsc2 *unit, int inNumSamples)
           float fractionalExtraHarmonics = extraHarmonicsAdjust * pow(slope,hiHarmonicsIntPlusOne) * lookupi1(table0, table1, sinPhaseHiPlusOne, lomask);
           
           float z = ((((b*c) - (a*d))  / ((c*c) + (d*d))) - (((f*g) - (e*h))  / ((g*g) + (h*h))) + fractionalFundamental + fractionalExtraHarmonics) / ampFactor;
-          phase += (int32)(cpstoinc * ZXP(freqin));
+          phase += (int32_t)(cpstoinc * ZXP(freqin));
           ZXP(out) = z;
           );
     unit->m_phase = phase;
@@ -2199,8 +2200,8 @@ void BLOsc2_next_aakka(BLOsc2 *unit, int inNumSamples)
     float *table0 = ft->mSineWavetable;
     float *table1 = table0 + 1;
     
-    int32 phase = unit->m_phase;
-    int32 lomask = unit->m_lomask;
+    int32_t phase = unit->m_phase;
+    int32_t lomask = unit->m_lomask;
     
     float cpstoinc = unit->m_cpstoinc;
     float radtoinc = unit->m_radtoinc;
@@ -2208,19 +2209,19 @@ void BLOsc2_next_aakka(BLOsc2 *unit, int inNumSamples)
     
     LOOP1(inNumSamples,
           float loHarmonics = ZXP(loHarmonicsin);
-          int32 loHarmonicsInt = ceil(loHarmonics);
-          int32 loHarmonicsIntMinusOne = loHarmonicsInt - 1;
+          int32_t loHarmonicsInt = ceil(loHarmonics);
+          int32_t loHarmonicsIntMinusOne = loHarmonicsInt - 1;
           float loHarmonicsFrac = loHarmonicsInt - loHarmonics;
           
           float hiHarmonics = hiHarmonicsin;
-          int32 hiHarmonicsInt = floor(hiHarmonics);
+          int32_t hiHarmonicsInt = floor(hiHarmonics);
           float hiHarmonicsFrac = hiHarmonics - hiHarmonicsInt;
           
-          int32 hiHarmonicsIntPlusOne = hiHarmonicsInt + 1;
-          int32 loEvenHarmonics = loHarmonicsInt%2 == 0? loHarmonicsInt : loHarmonicsInt + 1; // The lowest even harmonic index
-          int32 hiEvenHarmonics = hiHarmonicsInt%2 == 0? hiHarmonicsInt : hiHarmonicsInt - 1; // The highest even harmonic index
-          int32 hiEvenHarmonicsPlusTwo = hiEvenHarmonics + 2;
-          int32 numEvenHarmonics = (hiEvenHarmonics - loEvenHarmonics) / 2 + 1; //The total number of even harmonics
+          int32_t hiHarmonicsIntPlusOne = hiHarmonicsInt + 1;
+          int32_t loEvenHarmonics = loHarmonicsInt%2 == 0? loHarmonicsInt : loHarmonicsInt + 1; // The lowest even harmonic index
+          int32_t hiEvenHarmonics = hiHarmonicsInt%2 == 0? hiHarmonicsInt : hiHarmonicsInt - 1; // The highest even harmonic index
+          int32_t hiEvenHarmonicsPlusTwo = hiEvenHarmonics + 2;
+          int32_t numEvenHarmonics = (hiEvenHarmonics - loEvenHarmonics) / 2 + 1; //The total number of even harmonics
           
           float slope = slopein;
           float evenOddRatio = ZXP(evenOddRatioin);
@@ -2232,19 +2233,19 @@ void BLOsc2_next_aakka(BLOsc2 *unit, int inNumSamples)
           float ampFactor = 0.99<slope&&slope<1.01? (hiHarmonicsInt - loHarmonicsInt + 1) - evenOddFactor * numEvenHarmonics + fundamentalAdjust + extraHarmonicsAdjust:((pow(slope,loHarmonicsInt) - pow(slope,hiHarmonicsIntPlusOne)) / (1 - slope)) - (evenOddFactor * (pow(slope, loEvenHarmonics) - pow(slope, hiEvenHarmonicsPlusTwo)) / (1 - pow(slope, 2))) + fundamentalAdjust * pow(slope,loHarmonicsIntMinusOne) + extraHarmonicsAdjust * pow(slope, hiHarmonicsIntPlusOne);
           //ampFactor will be used to normalize the output amplitude. To avoid the denominator of this calculation to be 0 when slope = 1, the different formula is used when slope falls between 0.99 and 1.01.
           
-          int32 sinPhaseBase = phase;
-          int32 cosPhaseBase = phase + (int32)(radtoinc * pi2);
-          int32 sinPhaseLo = phase * loHarmonicsInt;
-          int32 sinPhaseLoMinusOne = phase * loHarmonicsIntMinusOne;
-          int32 cosPhaseLo = phase * loHarmonicsInt + (int32)(radtoinc * pi2);
-          int32 sinPhaseHiPlusOne = phase * hiHarmonicsIntPlusOne;
-          int32 cosPhaseHiPlusOne = phase * hiHarmonicsIntPlusOne + (int32)(radtoinc * pi2);
-          int32 sinPhase2 = phase * 2;
-          int32 cosPhase2 = phase * 2 + (int32)(radtoinc * pi2);
-          int32 sinPhaseLoEven = phase * loEvenHarmonics;
-          int32 cosPhaseLoEven = phase * loEvenHarmonics + (int32)(radtoinc * pi2);
-          int32 sinPhaseHiEvenPlusTwo = phase * hiEvenHarmonicsPlusTwo;
-          int32 cosPhaseHiEvenPlusTWo = phase * hiEvenHarmonicsPlusTwo + (int32)(radtoinc * pi2);
+          int32_t sinPhaseBase = phase;
+          int32_t cosPhaseBase = phase + (int32_t)(radtoinc * pi2);
+          int32_t sinPhaseLo = phase * loHarmonicsInt;
+          int32_t sinPhaseLoMinusOne = phase * loHarmonicsIntMinusOne;
+          int32_t cosPhaseLo = phase * loHarmonicsInt + (int32_t)(radtoinc * pi2);
+          int32_t sinPhaseHiPlusOne = phase * hiHarmonicsIntPlusOne;
+          int32_t cosPhaseHiPlusOne = phase * hiHarmonicsIntPlusOne + (int32_t)(radtoinc * pi2);
+          int32_t sinPhase2 = phase * 2;
+          int32_t cosPhase2 = phase * 2 + (int32_t)(radtoinc * pi2);
+          int32_t sinPhaseLoEven = phase * loEvenHarmonics;
+          int32_t cosPhaseLoEven = phase * loEvenHarmonics + (int32_t)(radtoinc * pi2);
+          int32_t sinPhaseHiEvenPlusTwo = phase * hiEvenHarmonicsPlusTwo;
+          int32_t cosPhaseHiEvenPlusTWo = phase * hiEvenHarmonicsPlusTwo + (int32_t)(radtoinc * pi2);
           
           float a = pow(slope,loHarmonicsInt) * lookupi1(table0, table1, cosPhaseLo, lomask) - pow(slope,hiHarmonicsIntPlusOne) * lookupi1(table0, table1, cosPhaseHiPlusOne, lomask);
           float b = pow(slope,loHarmonicsInt) * lookupi1(table0, table1, sinPhaseLo, lomask) - pow(slope,hiHarmonicsIntPlusOne) * lookupi1(table0, table1, sinPhaseHiPlusOne, lomask);
@@ -2259,7 +2260,7 @@ void BLOsc2_next_aakka(BLOsc2 *unit, int inNumSamples)
           float fractionalExtraHarmonics = extraHarmonicsAdjust * pow(slope,hiHarmonicsIntPlusOne) * lookupi1(table0, table1, sinPhaseHiPlusOne, lomask);
           
           float z = ((((b*c) - (a*d))  / ((c*c) + (d*d))) - (((f*g) - (e*h))  / ((g*g) + (h*h))) + fractionalFundamental + fractionalExtraHarmonics) / ampFactor;
-          phase += (int32)(cpstoinc * ZXP(freqin));
+          phase += (int32_t)(cpstoinc * ZXP(freqin));
           ZXP(out) = z;
           );
     unit->m_phase = phase;
@@ -2278,8 +2279,8 @@ void BLOsc2_next_aakak(BLOsc2 *unit, int inNumSamples)
     float *table0 = ft->mSineWavetable;
     float *table1 = table0 + 1;
     
-    int32 phase = unit->m_phase;
-    int32 lomask = unit->m_lomask;
+    int32_t phase = unit->m_phase;
+    int32_t lomask = unit->m_lomask;
     
     float cpstoinc = unit->m_cpstoinc;
     float radtoinc = unit->m_radtoinc;
@@ -2287,19 +2288,19 @@ void BLOsc2_next_aakak(BLOsc2 *unit, int inNumSamples)
     
     LOOP1(inNumSamples,
           float loHarmonics = ZXP(loHarmonicsin);
-          int32 loHarmonicsInt = ceil(loHarmonics);
-          int32 loHarmonicsIntMinusOne = loHarmonicsInt - 1;
+          int32_t loHarmonicsInt = ceil(loHarmonics);
+          int32_t loHarmonicsIntMinusOne = loHarmonicsInt - 1;
           float loHarmonicsFrac = loHarmonicsInt - loHarmonics;
           
           float hiHarmonics = hiHarmonicsin;
-          int32 hiHarmonicsInt = floor(hiHarmonics);
+          int32_t hiHarmonicsInt = floor(hiHarmonics);
           float hiHarmonicsFrac = hiHarmonics - hiHarmonicsInt;
           
-          int32 hiHarmonicsIntPlusOne = hiHarmonicsInt + 1;
-          int32 loEvenHarmonics = loHarmonicsInt%2 == 0? loHarmonicsInt : loHarmonicsInt + 1; // The lowest even harmonic index
-          int32 hiEvenHarmonics = hiHarmonicsInt%2 == 0? hiHarmonicsInt : hiHarmonicsInt - 1; // The highest even harmonic index
-          int32 hiEvenHarmonicsPlusTwo = hiEvenHarmonics + 2;
-          int32 numEvenHarmonics = (hiEvenHarmonics - loEvenHarmonics) / 2 + 1; //The total number of even harmonics
+          int32_t hiHarmonicsIntPlusOne = hiHarmonicsInt + 1;
+          int32_t loEvenHarmonics = loHarmonicsInt%2 == 0? loHarmonicsInt : loHarmonicsInt + 1; // The lowest even harmonic index
+          int32_t hiEvenHarmonics = hiHarmonicsInt%2 == 0? hiHarmonicsInt : hiHarmonicsInt - 1; // The highest even harmonic index
+          int32_t hiEvenHarmonicsPlusTwo = hiEvenHarmonics + 2;
+          int32_t numEvenHarmonics = (hiEvenHarmonics - loEvenHarmonics) / 2 + 1; //The total number of even harmonics
           
           float slope = ZXP(slopein);
           float evenOddRatio = evenOddRatioin;
@@ -2311,19 +2312,19 @@ void BLOsc2_next_aakak(BLOsc2 *unit, int inNumSamples)
           float ampFactor = 0.99<slope&&slope<1.01? (hiHarmonicsInt - loHarmonicsInt + 1) - evenOddFactor * numEvenHarmonics + fundamentalAdjust + extraHarmonicsAdjust:((pow(slope,loHarmonicsInt) - pow(slope,hiHarmonicsIntPlusOne)) / (1 - slope)) - (evenOddFactor * (pow(slope, loEvenHarmonics) - pow(slope, hiEvenHarmonicsPlusTwo)) / (1 - pow(slope, 2))) + fundamentalAdjust * pow(slope,loHarmonicsIntMinusOne) + extraHarmonicsAdjust * pow(slope, hiHarmonicsIntPlusOne);
           //ampFactor will be used to normalize the output amplitude. To avoid the denominator of this calculation to be 0 when slope = 1, the different formula is used when slope falls between 0.99 and 1.01.
           
-          int32 sinPhaseBase = phase;
-          int32 cosPhaseBase = phase + (int32)(radtoinc * pi2);
-          int32 sinPhaseLo = phase * loHarmonicsInt;
-          int32 sinPhaseLoMinusOne = phase * loHarmonicsIntMinusOne;
-          int32 cosPhaseLo = phase * loHarmonicsInt + (int32)(radtoinc * pi2);
-          int32 sinPhaseHiPlusOne = phase * hiHarmonicsIntPlusOne;
-          int32 cosPhaseHiPlusOne = phase * hiHarmonicsIntPlusOne + (int32)(radtoinc * pi2);
-          int32 sinPhase2 = phase * 2;
-          int32 cosPhase2 = phase * 2 + (int32)(radtoinc * pi2);
-          int32 sinPhaseLoEven = phase * loEvenHarmonics;
-          int32 cosPhaseLoEven = phase * loEvenHarmonics + (int32)(radtoinc * pi2);
-          int32 sinPhaseHiEvenPlusTwo = phase * hiEvenHarmonicsPlusTwo;
-          int32 cosPhaseHiEvenPlusTWo = phase * hiEvenHarmonicsPlusTwo + (int32)(radtoinc * pi2);
+          int32_t sinPhaseBase = phase;
+          int32_t cosPhaseBase = phase + (int32_t)(radtoinc * pi2);
+          int32_t sinPhaseLo = phase * loHarmonicsInt;
+          int32_t sinPhaseLoMinusOne = phase * loHarmonicsIntMinusOne;
+          int32_t cosPhaseLo = phase * loHarmonicsInt + (int32_t)(radtoinc * pi2);
+          int32_t sinPhaseHiPlusOne = phase * hiHarmonicsIntPlusOne;
+          int32_t cosPhaseHiPlusOne = phase * hiHarmonicsIntPlusOne + (int32_t)(radtoinc * pi2);
+          int32_t sinPhase2 = phase * 2;
+          int32_t cosPhase2 = phase * 2 + (int32_t)(radtoinc * pi2);
+          int32_t sinPhaseLoEven = phase * loEvenHarmonics;
+          int32_t cosPhaseLoEven = phase * loEvenHarmonics + (int32_t)(radtoinc * pi2);
+          int32_t sinPhaseHiEvenPlusTwo = phase * hiEvenHarmonicsPlusTwo;
+          int32_t cosPhaseHiEvenPlusTWo = phase * hiEvenHarmonicsPlusTwo + (int32_t)(radtoinc * pi2);
           
           float a = pow(slope,loHarmonicsInt) * lookupi1(table0, table1, cosPhaseLo, lomask) - pow(slope,hiHarmonicsIntPlusOne) * lookupi1(table0, table1, cosPhaseHiPlusOne, lomask);
           float b = pow(slope,loHarmonicsInt) * lookupi1(table0, table1, sinPhaseLo, lomask) - pow(slope,hiHarmonicsIntPlusOne) * lookupi1(table0, table1, sinPhaseHiPlusOne, lomask);
@@ -2338,7 +2339,7 @@ void BLOsc2_next_aakak(BLOsc2 *unit, int inNumSamples)
           float fractionalExtraHarmonics = extraHarmonicsAdjust * pow(slope,hiHarmonicsIntPlusOne) * lookupi1(table0, table1, sinPhaseHiPlusOne, lomask);
           
           float z = ((((b*c) - (a*d))  / ((c*c) + (d*d))) - (((f*g) - (e*h))  / ((g*g) + (h*h))) + fractionalFundamental + fractionalExtraHarmonics) / ampFactor;
-          phase += (int32)(cpstoinc * ZXP(freqin));
+          phase += (int32_t)(cpstoinc * ZXP(freqin));
           ZXP(out) = z;
           );
     unit->m_phase = phase;
@@ -2357,8 +2358,8 @@ void BLOsc2_next_aakaa(BLOsc2 *unit, int inNumSamples)
     float *table0 = ft->mSineWavetable;
     float *table1 = table0 + 1;
     
-    int32 phase = unit->m_phase;
-    int32 lomask = unit->m_lomask;
+    int32_t phase = unit->m_phase;
+    int32_t lomask = unit->m_lomask;
     
     float cpstoinc = unit->m_cpstoinc;
     float radtoinc = unit->m_radtoinc;
@@ -2366,19 +2367,19 @@ void BLOsc2_next_aakaa(BLOsc2 *unit, int inNumSamples)
     
     LOOP1(inNumSamples,
           float loHarmonics = ZXP(loHarmonicsin);
-          int32 loHarmonicsInt = ceil(loHarmonics);
-          int32 loHarmonicsIntMinusOne = loHarmonicsInt - 1;
+          int32_t loHarmonicsInt = ceil(loHarmonics);
+          int32_t loHarmonicsIntMinusOne = loHarmonicsInt - 1;
           float loHarmonicsFrac = loHarmonicsInt - loHarmonics;
           
           float hiHarmonics = hiHarmonicsin;
-          int32 hiHarmonicsInt = floor(hiHarmonics);
+          int32_t hiHarmonicsInt = floor(hiHarmonics);
           float hiHarmonicsFrac = hiHarmonics - hiHarmonicsInt;
           
-          int32 hiHarmonicsIntPlusOne = hiHarmonicsInt + 1;
-          int32 loEvenHarmonics = loHarmonicsInt%2 == 0? loHarmonicsInt : loHarmonicsInt + 1; // The lowest even harmonic index
-          int32 hiEvenHarmonics = hiHarmonicsInt%2 == 0? hiHarmonicsInt : hiHarmonicsInt - 1; // The highest even harmonic index
-          int32 hiEvenHarmonicsPlusTwo = hiEvenHarmonics + 2;
-          int32 numEvenHarmonics = (hiEvenHarmonics - loEvenHarmonics) / 2 + 1; //The total number of even harmonics
+          int32_t hiHarmonicsIntPlusOne = hiHarmonicsInt + 1;
+          int32_t loEvenHarmonics = loHarmonicsInt%2 == 0? loHarmonicsInt : loHarmonicsInt + 1; // The lowest even harmonic index
+          int32_t hiEvenHarmonics = hiHarmonicsInt%2 == 0? hiHarmonicsInt : hiHarmonicsInt - 1; // The highest even harmonic index
+          int32_t hiEvenHarmonicsPlusTwo = hiEvenHarmonics + 2;
+          int32_t numEvenHarmonics = (hiEvenHarmonics - loEvenHarmonics) / 2 + 1; //The total number of even harmonics
           
           float slope = ZXP(slopein);
           float evenOddRatio = ZXP(evenOddRatioin);
@@ -2390,19 +2391,19 @@ void BLOsc2_next_aakaa(BLOsc2 *unit, int inNumSamples)
           float ampFactor = 0.99<slope&&slope<1.01? (hiHarmonicsInt - loHarmonicsInt + 1) - evenOddFactor * numEvenHarmonics + fundamentalAdjust + extraHarmonicsAdjust:((pow(slope,loHarmonicsInt) - pow(slope,hiHarmonicsIntPlusOne)) / (1 - slope)) - (evenOddFactor * (pow(slope, loEvenHarmonics) - pow(slope, hiEvenHarmonicsPlusTwo)) / (1 - pow(slope, 2))) + fundamentalAdjust * pow(slope,loHarmonicsIntMinusOne) + extraHarmonicsAdjust * pow(slope, hiHarmonicsIntPlusOne);
           //ampFactor will be used to normalize the output amplitude. To avoid the denominator of this calculation to be 0 when slope = 1, the different formula is used when slope falls between 0.99 and 1.01.
           
-          int32 sinPhaseBase = phase;
-          int32 cosPhaseBase = phase + (int32)(radtoinc * pi2);
-          int32 sinPhaseLo = phase * loHarmonicsInt;
-          int32 sinPhaseLoMinusOne = phase * loHarmonicsIntMinusOne;
-          int32 cosPhaseLo = phase * loHarmonicsInt + (int32)(radtoinc * pi2);
-          int32 sinPhaseHiPlusOne = phase * hiHarmonicsIntPlusOne;
-          int32 cosPhaseHiPlusOne = phase * hiHarmonicsIntPlusOne + (int32)(radtoinc * pi2);
-          int32 sinPhase2 = phase * 2;
-          int32 cosPhase2 = phase * 2 + (int32)(radtoinc * pi2);
-          int32 sinPhaseLoEven = phase * loEvenHarmonics;
-          int32 cosPhaseLoEven = phase * loEvenHarmonics + (int32)(radtoinc * pi2);
-          int32 sinPhaseHiEvenPlusTwo = phase * hiEvenHarmonicsPlusTwo;
-          int32 cosPhaseHiEvenPlusTWo = phase * hiEvenHarmonicsPlusTwo + (int32)(radtoinc * pi2);
+          int32_t sinPhaseBase = phase;
+          int32_t cosPhaseBase = phase + (int32_t)(radtoinc * pi2);
+          int32_t sinPhaseLo = phase * loHarmonicsInt;
+          int32_t sinPhaseLoMinusOne = phase * loHarmonicsIntMinusOne;
+          int32_t cosPhaseLo = phase * loHarmonicsInt + (int32_t)(radtoinc * pi2);
+          int32_t sinPhaseHiPlusOne = phase * hiHarmonicsIntPlusOne;
+          int32_t cosPhaseHiPlusOne = phase * hiHarmonicsIntPlusOne + (int32_t)(radtoinc * pi2);
+          int32_t sinPhase2 = phase * 2;
+          int32_t cosPhase2 = phase * 2 + (int32_t)(radtoinc * pi2);
+          int32_t sinPhaseLoEven = phase * loEvenHarmonics;
+          int32_t cosPhaseLoEven = phase * loEvenHarmonics + (int32_t)(radtoinc * pi2);
+          int32_t sinPhaseHiEvenPlusTwo = phase * hiEvenHarmonicsPlusTwo;
+          int32_t cosPhaseHiEvenPlusTWo = phase * hiEvenHarmonicsPlusTwo + (int32_t)(radtoinc * pi2);
           
           float a = pow(slope,loHarmonicsInt) * lookupi1(table0, table1, cosPhaseLo, lomask) - pow(slope,hiHarmonicsIntPlusOne) * lookupi1(table0, table1, cosPhaseHiPlusOne, lomask);
           float b = pow(slope,loHarmonicsInt) * lookupi1(table0, table1, sinPhaseLo, lomask) - pow(slope,hiHarmonicsIntPlusOne) * lookupi1(table0, table1, sinPhaseHiPlusOne, lomask);
@@ -2417,7 +2418,7 @@ void BLOsc2_next_aakaa(BLOsc2 *unit, int inNumSamples)
           float fractionalExtraHarmonics = extraHarmonicsAdjust * pow(slope,hiHarmonicsIntPlusOne) * lookupi1(table0, table1, sinPhaseHiPlusOne, lomask);
           
           float z = ((((b*c) - (a*d))  / ((c*c) + (d*d))) - (((f*g) - (e*h))  / ((g*g) + (h*h))) + fractionalFundamental + fractionalExtraHarmonics) / ampFactor;
-          phase += (int32)(cpstoinc * ZXP(freqin));
+          phase += (int32_t)(cpstoinc * ZXP(freqin));
           ZXP(out) = z;
           );
     unit->m_phase = phase;
@@ -2436,8 +2437,8 @@ void BLOsc2_next_aaakk(BLOsc2 *unit, int inNumSamples)
     float *table0 = ft->mSineWavetable;
     float *table1 = table0 + 1;
     
-    int32 phase = unit->m_phase;
-    int32 lomask = unit->m_lomask;
+    int32_t phase = unit->m_phase;
+    int32_t lomask = unit->m_lomask;
     
     float cpstoinc = unit->m_cpstoinc;
     float radtoinc = unit->m_radtoinc;
@@ -2445,19 +2446,19 @@ void BLOsc2_next_aaakk(BLOsc2 *unit, int inNumSamples)
     
     LOOP1(inNumSamples,
           float loHarmonics = ZXP(loHarmonicsin);
-          int32 loHarmonicsInt = ceil(loHarmonics);
-          int32 loHarmonicsIntMinusOne = loHarmonicsInt - 1;
+          int32_t loHarmonicsInt = ceil(loHarmonics);
+          int32_t loHarmonicsIntMinusOne = loHarmonicsInt - 1;
           float loHarmonicsFrac = loHarmonicsInt - loHarmonics;
           
           float hiHarmonics = ZXP(hiHarmonicsin);
-          int32 hiHarmonicsInt = floor(hiHarmonics);
+          int32_t hiHarmonicsInt = floor(hiHarmonics);
           float hiHarmonicsFrac = hiHarmonics - hiHarmonicsInt;
           
-          int32 hiHarmonicsIntPlusOne = hiHarmonicsInt + 1;
-          int32 loEvenHarmonics = loHarmonicsInt%2 == 0? loHarmonicsInt : loHarmonicsInt + 1; // The lowest even harmonic index
-          int32 hiEvenHarmonics = hiHarmonicsInt%2 == 0? hiHarmonicsInt : hiHarmonicsInt - 1; // The highest even harmonic index
-          int32 hiEvenHarmonicsPlusTwo = hiEvenHarmonics + 2;
-          int32 numEvenHarmonics = (hiEvenHarmonics - loEvenHarmonics) / 2 + 1; //The total number of even harmonics
+          int32_t hiHarmonicsIntPlusOne = hiHarmonicsInt + 1;
+          int32_t loEvenHarmonics = loHarmonicsInt%2 == 0? loHarmonicsInt : loHarmonicsInt + 1; // The lowest even harmonic index
+          int32_t hiEvenHarmonics = hiHarmonicsInt%2 == 0? hiHarmonicsInt : hiHarmonicsInt - 1; // The highest even harmonic index
+          int32_t hiEvenHarmonicsPlusTwo = hiEvenHarmonics + 2;
+          int32_t numEvenHarmonics = (hiEvenHarmonics - loEvenHarmonics) / 2 + 1; //The total number of even harmonics
           
           float slope = slopein;
           float evenOddRatio = evenOddRatioin;
@@ -2469,19 +2470,19 @@ void BLOsc2_next_aaakk(BLOsc2 *unit, int inNumSamples)
           float ampFactor = 0.99<slope&&slope<1.01? (hiHarmonicsInt - loHarmonicsInt + 1) - evenOddFactor * numEvenHarmonics + fundamentalAdjust + extraHarmonicsAdjust:((pow(slope,loHarmonicsInt) - pow(slope,hiHarmonicsIntPlusOne)) / (1 - slope)) - (evenOddFactor * (pow(slope, loEvenHarmonics) - pow(slope, hiEvenHarmonicsPlusTwo)) / (1 - pow(slope, 2))) + fundamentalAdjust * pow(slope,loHarmonicsIntMinusOne) + extraHarmonicsAdjust * pow(slope, hiHarmonicsIntPlusOne);
           //ampFactor will be used to normalize the output amplitude. To avoid the denominator of this calculation to be 0 when slope = 1, the different formula is used when slope falls between 0.99 and 1.01.
           
-          int32 sinPhaseBase = phase;
-          int32 cosPhaseBase = phase + (int32)(radtoinc * pi2);
-          int32 sinPhaseLo = phase * loHarmonicsInt;
-          int32 sinPhaseLoMinusOne = phase * loHarmonicsIntMinusOne;
-          int32 cosPhaseLo = phase * loHarmonicsInt + (int32)(radtoinc * pi2);
-          int32 sinPhaseHiPlusOne = phase * hiHarmonicsIntPlusOne;
-          int32 cosPhaseHiPlusOne = phase * hiHarmonicsIntPlusOne + (int32)(radtoinc * pi2);
-          int32 sinPhase2 = phase * 2;
-          int32 cosPhase2 = phase * 2 + (int32)(radtoinc * pi2);
-          int32 sinPhaseLoEven = phase * loEvenHarmonics;
-          int32 cosPhaseLoEven = phase * loEvenHarmonics + (int32)(radtoinc * pi2);
-          int32 sinPhaseHiEvenPlusTwo = phase * hiEvenHarmonicsPlusTwo;
-          int32 cosPhaseHiEvenPlusTWo = phase * hiEvenHarmonicsPlusTwo + (int32)(radtoinc * pi2);
+          int32_t sinPhaseBase = phase;
+          int32_t cosPhaseBase = phase + (int32_t)(radtoinc * pi2);
+          int32_t sinPhaseLo = phase * loHarmonicsInt;
+          int32_t sinPhaseLoMinusOne = phase * loHarmonicsIntMinusOne;
+          int32_t cosPhaseLo = phase * loHarmonicsInt + (int32_t)(radtoinc * pi2);
+          int32_t sinPhaseHiPlusOne = phase * hiHarmonicsIntPlusOne;
+          int32_t cosPhaseHiPlusOne = phase * hiHarmonicsIntPlusOne + (int32_t)(radtoinc * pi2);
+          int32_t sinPhase2 = phase * 2;
+          int32_t cosPhase2 = phase * 2 + (int32_t)(radtoinc * pi2);
+          int32_t sinPhaseLoEven = phase * loEvenHarmonics;
+          int32_t cosPhaseLoEven = phase * loEvenHarmonics + (int32_t)(radtoinc * pi2);
+          int32_t sinPhaseHiEvenPlusTwo = phase * hiEvenHarmonicsPlusTwo;
+          int32_t cosPhaseHiEvenPlusTWo = phase * hiEvenHarmonicsPlusTwo + (int32_t)(radtoinc * pi2);
           
           float a = pow(slope,loHarmonicsInt) * lookupi1(table0, table1, cosPhaseLo, lomask) - pow(slope,hiHarmonicsIntPlusOne) * lookupi1(table0, table1, cosPhaseHiPlusOne, lomask);
           float b = pow(slope,loHarmonicsInt) * lookupi1(table0, table1, sinPhaseLo, lomask) - pow(slope,hiHarmonicsIntPlusOne) * lookupi1(table0, table1, sinPhaseHiPlusOne, lomask);
@@ -2496,7 +2497,7 @@ void BLOsc2_next_aaakk(BLOsc2 *unit, int inNumSamples)
           float fractionalExtraHarmonics = extraHarmonicsAdjust * pow(slope,hiHarmonicsIntPlusOne) * lookupi1(table0, table1, sinPhaseHiPlusOne, lomask);
           
           float z = ((((b*c) - (a*d))  / ((c*c) + (d*d))) - (((f*g) - (e*h))  / ((g*g) + (h*h))) + fractionalFundamental + fractionalExtraHarmonics) / ampFactor;
-          phase += (int32)(cpstoinc * ZXP(freqin));
+          phase += (int32_t)(cpstoinc * ZXP(freqin));
           ZXP(out) = z;
           );
     unit->m_phase = phase;
@@ -2515,8 +2516,8 @@ void BLOsc2_next_aaaka(BLOsc2 *unit, int inNumSamples)
     float *table0 = ft->mSineWavetable;
     float *table1 = table0 + 1;
     
-    int32 phase = unit->m_phase;
-    int32 lomask = unit->m_lomask;
+    int32_t phase = unit->m_phase;
+    int32_t lomask = unit->m_lomask;
     
     float cpstoinc = unit->m_cpstoinc;
     float radtoinc = unit->m_radtoinc;
@@ -2524,19 +2525,19 @@ void BLOsc2_next_aaaka(BLOsc2 *unit, int inNumSamples)
     
     LOOP1(inNumSamples,
           float loHarmonics = ZXP(loHarmonicsin);
-          int32 loHarmonicsInt = ceil(loHarmonics);
-          int32 loHarmonicsIntMinusOne = loHarmonicsInt - 1;
+          int32_t loHarmonicsInt = ceil(loHarmonics);
+          int32_t loHarmonicsIntMinusOne = loHarmonicsInt - 1;
           float loHarmonicsFrac = loHarmonicsInt - loHarmonics;
           
           float hiHarmonics = ZXP(hiHarmonicsin);
-          int32 hiHarmonicsInt = floor(hiHarmonics);
+          int32_t hiHarmonicsInt = floor(hiHarmonics);
           float hiHarmonicsFrac = hiHarmonics - hiHarmonicsInt;
           
-          int32 hiHarmonicsIntPlusOne = hiHarmonicsInt + 1;
-          int32 loEvenHarmonics = loHarmonicsInt%2 == 0? loHarmonicsInt : loHarmonicsInt + 1; // The lowest even harmonic index
-          int32 hiEvenHarmonics = hiHarmonicsInt%2 == 0? hiHarmonicsInt : hiHarmonicsInt - 1; // The highest even harmonic index
-          int32 hiEvenHarmonicsPlusTwo = hiEvenHarmonics + 2;
-          int32 numEvenHarmonics = (hiEvenHarmonics - loEvenHarmonics) / 2 + 1; //The total number of even harmonics
+          int32_t hiHarmonicsIntPlusOne = hiHarmonicsInt + 1;
+          int32_t loEvenHarmonics = loHarmonicsInt%2 == 0? loHarmonicsInt : loHarmonicsInt + 1; // The lowest even harmonic index
+          int32_t hiEvenHarmonics = hiHarmonicsInt%2 == 0? hiHarmonicsInt : hiHarmonicsInt - 1; // The highest even harmonic index
+          int32_t hiEvenHarmonicsPlusTwo = hiEvenHarmonics + 2;
+          int32_t numEvenHarmonics = (hiEvenHarmonics - loEvenHarmonics) / 2 + 1; //The total number of even harmonics
           
           float slope = slopein;
           float evenOddRatio = ZXP(evenOddRatioin);
@@ -2548,19 +2549,19 @@ void BLOsc2_next_aaaka(BLOsc2 *unit, int inNumSamples)
           float ampFactor = 0.99<slope&&slope<1.01? (hiHarmonicsInt - loHarmonicsInt + 1) - evenOddFactor * numEvenHarmonics + fundamentalAdjust + extraHarmonicsAdjust:((pow(slope,loHarmonicsInt) - pow(slope,hiHarmonicsIntPlusOne)) / (1 - slope)) - (evenOddFactor * (pow(slope, loEvenHarmonics) - pow(slope, hiEvenHarmonicsPlusTwo)) / (1 - pow(slope, 2))) + fundamentalAdjust * pow(slope,loHarmonicsIntMinusOne) + extraHarmonicsAdjust * pow(slope, hiHarmonicsIntPlusOne);
           //ampFactor will be used to normalize the output amplitude. To avoid the denominator of this calculation to be 0 when slope = 1, the different formula is used when slope falls between 0.99 and 1.01.
           
-          int32 sinPhaseBase = phase;
-          int32 cosPhaseBase = phase + (int32)(radtoinc * pi2);
-          int32 sinPhaseLo = phase * loHarmonicsInt;
-          int32 sinPhaseLoMinusOne = phase * loHarmonicsIntMinusOne;
-          int32 cosPhaseLo = phase * loHarmonicsInt + (int32)(radtoinc * pi2);
-          int32 sinPhaseHiPlusOne = phase * hiHarmonicsIntPlusOne;
-          int32 cosPhaseHiPlusOne = phase * hiHarmonicsIntPlusOne + (int32)(radtoinc * pi2);
-          int32 sinPhase2 = phase * 2;
-          int32 cosPhase2 = phase * 2 + (int32)(radtoinc * pi2);
-          int32 sinPhaseLoEven = phase * loEvenHarmonics;
-          int32 cosPhaseLoEven = phase * loEvenHarmonics + (int32)(radtoinc * pi2);
-          int32 sinPhaseHiEvenPlusTwo = phase * hiEvenHarmonicsPlusTwo;
-          int32 cosPhaseHiEvenPlusTWo = phase * hiEvenHarmonicsPlusTwo + (int32)(radtoinc * pi2);
+          int32_t sinPhaseBase = phase;
+          int32_t cosPhaseBase = phase + (int32_t)(radtoinc * pi2);
+          int32_t sinPhaseLo = phase * loHarmonicsInt;
+          int32_t sinPhaseLoMinusOne = phase * loHarmonicsIntMinusOne;
+          int32_t cosPhaseLo = phase * loHarmonicsInt + (int32_t)(radtoinc * pi2);
+          int32_t sinPhaseHiPlusOne = phase * hiHarmonicsIntPlusOne;
+          int32_t cosPhaseHiPlusOne = phase * hiHarmonicsIntPlusOne + (int32_t)(radtoinc * pi2);
+          int32_t sinPhase2 = phase * 2;
+          int32_t cosPhase2 = phase * 2 + (int32_t)(radtoinc * pi2);
+          int32_t sinPhaseLoEven = phase * loEvenHarmonics;
+          int32_t cosPhaseLoEven = phase * loEvenHarmonics + (int32_t)(radtoinc * pi2);
+          int32_t sinPhaseHiEvenPlusTwo = phase * hiEvenHarmonicsPlusTwo;
+          int32_t cosPhaseHiEvenPlusTWo = phase * hiEvenHarmonicsPlusTwo + (int32_t)(radtoinc * pi2);
           
           float a = pow(slope,loHarmonicsInt) * lookupi1(table0, table1, cosPhaseLo, lomask) - pow(slope,hiHarmonicsIntPlusOne) * lookupi1(table0, table1, cosPhaseHiPlusOne, lomask);
           float b = pow(slope,loHarmonicsInt) * lookupi1(table0, table1, sinPhaseLo, lomask) - pow(slope,hiHarmonicsIntPlusOne) * lookupi1(table0, table1, sinPhaseHiPlusOne, lomask);
@@ -2575,7 +2576,7 @@ void BLOsc2_next_aaaka(BLOsc2 *unit, int inNumSamples)
           float fractionalExtraHarmonics = extraHarmonicsAdjust * pow(slope,hiHarmonicsIntPlusOne) * lookupi1(table0, table1, sinPhaseHiPlusOne, lomask);
           
           float z = ((((b*c) - (a*d))  / ((c*c) + (d*d))) - (((f*g) - (e*h))  / ((g*g) + (h*h))) + fractionalFundamental + fractionalExtraHarmonics) / ampFactor;
-          phase += (int32)(cpstoinc * ZXP(freqin));
+          phase += (int32_t)(cpstoinc * ZXP(freqin));
           ZXP(out) = z;
           );
     unit->m_phase = phase;
@@ -2594,8 +2595,8 @@ void BLOsc2_next_aaaak(BLOsc2 *unit, int inNumSamples)
     float *table0 = ft->mSineWavetable;
     float *table1 = table0 + 1;
     
-    int32 phase = unit->m_phase;
-    int32 lomask = unit->m_lomask;
+    int32_t phase = unit->m_phase;
+    int32_t lomask = unit->m_lomask;
     
     float cpstoinc = unit->m_cpstoinc;
     float radtoinc = unit->m_radtoinc;
@@ -2603,19 +2604,19 @@ void BLOsc2_next_aaaak(BLOsc2 *unit, int inNumSamples)
     
     LOOP1(inNumSamples,
           float loHarmonics = ZXP(loHarmonicsin);
-          int32 loHarmonicsInt = ceil(loHarmonics);
-          int32 loHarmonicsIntMinusOne = loHarmonicsInt - 1;
+          int32_t loHarmonicsInt = ceil(loHarmonics);
+          int32_t loHarmonicsIntMinusOne = loHarmonicsInt - 1;
           float loHarmonicsFrac = loHarmonicsInt - loHarmonics;
           
           float hiHarmonics = ZXP(hiHarmonicsin);
-          int32 hiHarmonicsInt = floor(hiHarmonics);
+          int32_t hiHarmonicsInt = floor(hiHarmonics);
           float hiHarmonicsFrac = hiHarmonics - hiHarmonicsInt;
           
-          int32 hiHarmonicsIntPlusOne = hiHarmonicsInt + 1;
-          int32 loEvenHarmonics = loHarmonicsInt%2 == 0? loHarmonicsInt : loHarmonicsInt + 1; // The lowest even harmonic index
-          int32 hiEvenHarmonics = hiHarmonicsInt%2 == 0? hiHarmonicsInt : hiHarmonicsInt - 1; // The highest even harmonic index
-          int32 hiEvenHarmonicsPlusTwo = hiEvenHarmonics + 2;
-          int32 numEvenHarmonics = (hiEvenHarmonics - loEvenHarmonics) / 2 + 1; //The total number of even harmonics
+          int32_t hiHarmonicsIntPlusOne = hiHarmonicsInt + 1;
+          int32_t loEvenHarmonics = loHarmonicsInt%2 == 0? loHarmonicsInt : loHarmonicsInt + 1; // The lowest even harmonic index
+          int32_t hiEvenHarmonics = hiHarmonicsInt%2 == 0? hiHarmonicsInt : hiHarmonicsInt - 1; // The highest even harmonic index
+          int32_t hiEvenHarmonicsPlusTwo = hiEvenHarmonics + 2;
+          int32_t numEvenHarmonics = (hiEvenHarmonics - loEvenHarmonics) / 2 + 1; //The total number of even harmonics
           
           float slope = ZXP(slopein);
           float evenOddRatio = evenOddRatioin;
@@ -2627,19 +2628,19 @@ void BLOsc2_next_aaaak(BLOsc2 *unit, int inNumSamples)
           float ampFactor = 0.99<slope&&slope<1.01? (hiHarmonicsInt - loHarmonicsInt + 1) - evenOddFactor * numEvenHarmonics + fundamentalAdjust + extraHarmonicsAdjust:((pow(slope,loHarmonicsInt) - pow(slope,hiHarmonicsIntPlusOne)) / (1 - slope)) - (evenOddFactor * (pow(slope, loEvenHarmonics) - pow(slope, hiEvenHarmonicsPlusTwo)) / (1 - pow(slope, 2))) + fundamentalAdjust * pow(slope,loHarmonicsIntMinusOne) + extraHarmonicsAdjust * pow(slope, hiHarmonicsIntPlusOne);
           //ampFactor will be used to normalize the output amplitude. To avoid the denominator of this calculation to be 0 when slope = 1, the different formula is used when slope falls between 0.99 and 1.01.
           
-          int32 sinPhaseBase = phase;
-          int32 cosPhaseBase = phase + (int32)(radtoinc * pi2);
-          int32 sinPhaseLo = phase * loHarmonicsInt;
-          int32 sinPhaseLoMinusOne = phase * loHarmonicsIntMinusOne;
-          int32 cosPhaseLo = phase * loHarmonicsInt + (int32)(radtoinc * pi2);
-          int32 sinPhaseHiPlusOne = phase * hiHarmonicsIntPlusOne;
-          int32 cosPhaseHiPlusOne = phase * hiHarmonicsIntPlusOne + (int32)(radtoinc * pi2);
-          int32 sinPhase2 = phase * 2;
-          int32 cosPhase2 = phase * 2 + (int32)(radtoinc * pi2);
-          int32 sinPhaseLoEven = phase * loEvenHarmonics;
-          int32 cosPhaseLoEven = phase * loEvenHarmonics + (int32)(radtoinc * pi2);
-          int32 sinPhaseHiEvenPlusTwo = phase * hiEvenHarmonicsPlusTwo;
-          int32 cosPhaseHiEvenPlusTWo = phase * hiEvenHarmonicsPlusTwo + (int32)(radtoinc * pi2);
+          int32_t sinPhaseBase = phase;
+          int32_t cosPhaseBase = phase + (int32_t)(radtoinc * pi2);
+          int32_t sinPhaseLo = phase * loHarmonicsInt;
+          int32_t sinPhaseLoMinusOne = phase * loHarmonicsIntMinusOne;
+          int32_t cosPhaseLo = phase * loHarmonicsInt + (int32_t)(radtoinc * pi2);
+          int32_t sinPhaseHiPlusOne = phase * hiHarmonicsIntPlusOne;
+          int32_t cosPhaseHiPlusOne = phase * hiHarmonicsIntPlusOne + (int32_t)(radtoinc * pi2);
+          int32_t sinPhase2 = phase * 2;
+          int32_t cosPhase2 = phase * 2 + (int32_t)(radtoinc * pi2);
+          int32_t sinPhaseLoEven = phase * loEvenHarmonics;
+          int32_t cosPhaseLoEven = phase * loEvenHarmonics + (int32_t)(radtoinc * pi2);
+          int32_t sinPhaseHiEvenPlusTwo = phase * hiEvenHarmonicsPlusTwo;
+          int32_t cosPhaseHiEvenPlusTWo = phase * hiEvenHarmonicsPlusTwo + (int32_t)(radtoinc * pi2);
           
           float a = pow(slope,loHarmonicsInt) * lookupi1(table0, table1, cosPhaseLo, lomask) - pow(slope,hiHarmonicsIntPlusOne) * lookupi1(table0, table1, cosPhaseHiPlusOne, lomask);
           float b = pow(slope,loHarmonicsInt) * lookupi1(table0, table1, sinPhaseLo, lomask) - pow(slope,hiHarmonicsIntPlusOne) * lookupi1(table0, table1, sinPhaseHiPlusOne, lomask);
@@ -2654,7 +2655,7 @@ void BLOsc2_next_aaaak(BLOsc2 *unit, int inNumSamples)
           float fractionalExtraHarmonics = extraHarmonicsAdjust * pow(slope,hiHarmonicsIntPlusOne) * lookupi1(table0, table1, sinPhaseHiPlusOne, lomask);
           
           float z = ((((b*c) - (a*d))  / ((c*c) + (d*d))) - (((f*g) - (e*h))  / ((g*g) + (h*h))) + fractionalFundamental + fractionalExtraHarmonics) / ampFactor;
-          phase += (int32)(cpstoinc * ZXP(freqin));
+          phase += (int32_t)(cpstoinc * ZXP(freqin));
           ZXP(out) = z;
           );
     unit->m_phase = phase;
@@ -2673,8 +2674,8 @@ void BLOsc2_next_aaaaa(BLOsc2 *unit, int inNumSamples)
     float *table0 = ft->mSineWavetable;
     float *table1 = table0 + 1;
     
-    int32 phase = unit->m_phase;
-    int32 lomask = unit->m_lomask;
+    int32_t phase = unit->m_phase;
+    int32_t lomask = unit->m_lomask;
     
     float cpstoinc = unit->m_cpstoinc;
     float radtoinc = unit->m_radtoinc;
@@ -2682,19 +2683,19 @@ void BLOsc2_next_aaaaa(BLOsc2 *unit, int inNumSamples)
     
     LOOP1(inNumSamples,
           float loHarmonics = ZXP(loHarmonicsin);
-          int32 loHarmonicsInt = ceil(loHarmonics);
-          int32 loHarmonicsIntMinusOne = loHarmonicsInt - 1;
+          int32_t loHarmonicsInt = ceil(loHarmonics);
+          int32_t loHarmonicsIntMinusOne = loHarmonicsInt - 1;
           float loHarmonicsFrac = loHarmonicsInt - loHarmonics;
 
           float hiHarmonics = ZXP(hiHarmonicsin);
-          int32 hiHarmonicsInt = floor(hiHarmonics);
+          int32_t hiHarmonicsInt = floor(hiHarmonics);
           float hiHarmonicsFrac = hiHarmonics - hiHarmonicsInt;
           
-          int32 hiHarmonicsIntPlusOne = hiHarmonicsInt + 1;
-          int32 loEvenHarmonics = loHarmonicsInt%2 == 0? loHarmonicsInt : loHarmonicsInt + 1; // The lowest even harmonic index
-          int32 hiEvenHarmonics = hiHarmonicsInt%2 == 0? hiHarmonicsInt : hiHarmonicsInt - 1; // The highest even harmonic index
-          int32 hiEvenHarmonicsPlusTwo = hiEvenHarmonics + 2;
-          int32 numEvenHarmonics = (hiEvenHarmonics - loEvenHarmonics) / 2 + 1; //The total number of even harmonics
+          int32_t hiHarmonicsIntPlusOne = hiHarmonicsInt + 1;
+          int32_t loEvenHarmonics = loHarmonicsInt%2 == 0? loHarmonicsInt : loHarmonicsInt + 1; // The lowest even harmonic index
+          int32_t hiEvenHarmonics = hiHarmonicsInt%2 == 0? hiHarmonicsInt : hiHarmonicsInt - 1; // The highest even harmonic index
+          int32_t hiEvenHarmonicsPlusTwo = hiEvenHarmonics + 2;
+          int32_t numEvenHarmonics = (hiEvenHarmonics - loEvenHarmonics) / 2 + 1; //The total number of even harmonics
           
           float slope = ZXP(slopein);
           float evenOddRatio = ZXP(evenOddRatioin);
@@ -2706,19 +2707,19 @@ void BLOsc2_next_aaaaa(BLOsc2 *unit, int inNumSamples)
           float ampFactor = 0.99<slope&&slope<1.01? (hiHarmonicsInt - loHarmonicsInt + 1) - evenOddFactor * numEvenHarmonics + fundamentalAdjust + extraHarmonicsAdjust:((pow(slope,loHarmonicsInt) - pow(slope,hiHarmonicsIntPlusOne)) / (1 - slope)) - (evenOddFactor * (pow(slope, loEvenHarmonics) - pow(slope, hiEvenHarmonicsPlusTwo)) / (1 - pow(slope, 2))) + fundamentalAdjust * pow(slope,loHarmonicsIntMinusOne) + extraHarmonicsAdjust * pow(slope, hiHarmonicsIntPlusOne);
           //ampFactor will be used to normalize the output amplitude. To avoid the denominator of this calculation to be 0 when slope = 1, the different formula is used when slope falls between 0.99 and 1.01.
 
-          int32 sinPhaseBase = phase;
-          int32 cosPhaseBase = phase + (int32)(radtoinc * pi2);
-          int32 sinPhaseLo = phase * loHarmonicsInt;
-          int32 sinPhaseLoMinusOne = phase * loHarmonicsIntMinusOne;
-          int32 cosPhaseLo = phase * loHarmonicsInt + (int32)(radtoinc * pi2);
-          int32 sinPhaseHiPlusOne = phase * hiHarmonicsIntPlusOne;
-          int32 cosPhaseHiPlusOne = phase * hiHarmonicsIntPlusOne + (int32)(radtoinc * pi2);
-          int32 sinPhase2 = phase * 2;
-          int32 cosPhase2 = phase * 2 + (int32)(radtoinc * pi2);
-          int32 sinPhaseLoEven = phase * loEvenHarmonics;
-          int32 cosPhaseLoEven = phase * loEvenHarmonics + (int32)(radtoinc * pi2);
-          int32 sinPhaseHiEvenPlusTwo = phase * hiEvenHarmonicsPlusTwo;
-          int32 cosPhaseHiEvenPlusTWo = phase * hiEvenHarmonicsPlusTwo + (int32)(radtoinc * pi2);
+          int32_t sinPhaseBase = phase;
+          int32_t cosPhaseBase = phase + (int32_t)(radtoinc * pi2);
+          int32_t sinPhaseLo = phase * loHarmonicsInt;
+          int32_t sinPhaseLoMinusOne = phase * loHarmonicsIntMinusOne;
+          int32_t cosPhaseLo = phase * loHarmonicsInt + (int32_t)(radtoinc * pi2);
+          int32_t sinPhaseHiPlusOne = phase * hiHarmonicsIntPlusOne;
+          int32_t cosPhaseHiPlusOne = phase * hiHarmonicsIntPlusOne + (int32_t)(radtoinc * pi2);
+          int32_t sinPhase2 = phase * 2;
+          int32_t cosPhase2 = phase * 2 + (int32_t)(radtoinc * pi2);
+          int32_t sinPhaseLoEven = phase * loEvenHarmonics;
+          int32_t cosPhaseLoEven = phase * loEvenHarmonics + (int32_t)(radtoinc * pi2);
+          int32_t sinPhaseHiEvenPlusTwo = phase * hiEvenHarmonicsPlusTwo;
+          int32_t cosPhaseHiEvenPlusTWo = phase * hiEvenHarmonicsPlusTwo + (int32_t)(radtoinc * pi2);
           
           float a = pow(slope,loHarmonicsInt) * lookupi1(table0, table1, cosPhaseLo, lomask) - pow(slope,hiHarmonicsIntPlusOne) * lookupi1(table0, table1, cosPhaseHiPlusOne, lomask);
           float b = pow(slope,loHarmonicsInt) * lookupi1(table0, table1, sinPhaseLo, lomask) - pow(slope,hiHarmonicsIntPlusOne) * lookupi1(table0, table1, sinPhaseHiPlusOne, lomask);
@@ -2733,7 +2734,7 @@ void BLOsc2_next_aaaaa(BLOsc2 *unit, int inNumSamples)
           float fractionalExtraHarmonics = extraHarmonicsAdjust * pow(slope,hiHarmonicsIntPlusOne) * lookupi1(table0, table1, sinPhaseHiPlusOne, lomask);
           
           float z = ((((b*c) - (a*d))  / ((c*c) + (d*d))) - (((f*g) - (e*h))  / ((g*g) + (h*h))) + fractionalFundamental + fractionalExtraHarmonics) / ampFactor;
-          phase += (int32)(cpstoinc * ZXP(freqin));
+          phase += (int32_t)(cpstoinc * ZXP(freqin));
           ZXP(out) = z;
           );
     unit->m_phase = phase;
